@@ -1,22 +1,35 @@
 import { createRouter, createWebHistory } from "vue-router";
+
 import { useAccount } from "./stores/account";
 
 const routes = [
-  { path: "/", component: () => import("./views/WelcomeView.vue") },
   {
-    path: "/auth/:mode(link|register|signin)",
-    component: () => import("./views/AuthView.vue"),
+    path: "/",
+    component: () => import("./views/WelcomeView.vue"),
   },
+
+  {
+    path: "/auth/register",
+    component: () => import("./views/Register.vue"),
+  },
+
+  {
+    path: "/auth/login",
+    component: () => import("./views/Login.vue"),
+  },
+
   {
     path: "/home",
     component: () => import("./views/HomeView.vue"),
     meta: { auth: true },
   },
+
   {
     path: "/topup",
     component: () => import("./views/TopUpView.vue"),
     meta: { auth: true },
   },
+
   {
     path: "/card",
     component: () => import("./views/CardView.vue"),
@@ -24,12 +37,23 @@ const routes = [
   },
 ];
 
-const router = createRouter({ history: createWebHistory(), routes });
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});
 
 router.beforeEach((to) => {
   const { user } = useAccount();
-  if (to.meta.auth && !user.value) return "/";
-  if (!to.meta.auth && user.value) return "/home";
+
+  // Protected page → send unauthenticated users to welcome
+  if (to.meta.auth && !user.value) {
+    return "/";
+  }
+
+  // Auth/welcome pages → don't show them to logged-in users
+  if (!to.meta.auth && user.value) {
+    return "/home";
+  }
 });
 
 export default router;

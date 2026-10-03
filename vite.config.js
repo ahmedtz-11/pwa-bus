@@ -9,11 +9,11 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["icon.svg"],
       manifest: {
-        name: "BusGo",
-        short_name: "BusGo",
+        name: "ZanBus",
+        short_name: "ZanBus",
         description: "Top up, ride and manage your bus card",
-        theme_color: "#0b6b4f",
-        background_color: "#0b6b4f",
+        theme_color: "#1055c9",
+        background_color: "#1055c9",
         display: "standalone",
         orientation: "portrait",
         start_url: "/",
@@ -31,4 +31,7 @@ export default defineConfig({
       workbox: { navigateFallback: "/index.html" },
     }),
   ],
+  build: {
+    outDir: "dist",
+  },
 });
