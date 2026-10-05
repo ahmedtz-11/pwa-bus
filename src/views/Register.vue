@@ -10,7 +10,7 @@ const { show } = useToast();
 
 const form = reactive({
   name: "",
-  phone: ""
+  phone: "",
 });
 
 const err = ref("");
@@ -23,7 +23,6 @@ function submit() {
     signUp({
       name: form.name || "John Doe",
       phone: form.phone || "0712345678",
-      pass: form.pass || "123456",
     });
 
     show("Account created successfully!");
@@ -37,31 +36,19 @@ function submit() {
 <template>
   <main class="auth-page min-vh-100 d-flex flex-column">
     <!-- Image section -->
-    <section class="hero position-relative">
+    <section class="hero">
       <div class="hero-bg"></div>
       <div class="hero-overlay"></div>
 
       <div class="position-relative z-2 h-100 p-4 d-flex flex-column">
-        <RouterLink to="/" class="text-white text-decoration-none fw-medium">
+        <RouterLink to="/" class="text-blue2 text-decoration-none fw-medium">
           <i class="bi bi-arrow-left me-2"></i>
           Back
         </RouterLink>
 
-        <div class="mt-auto text-white">
-          <div
-            class="logo bg-white bg-opacity-10 border border-white border-opacity-25 rounded-4 d-flex align-items-center justify-content-center mb-3"
-          >
-            <img src="/icon.svg" alt="Bus" />
-          </div>
-
-          <h3 class="fw-bold mb-1">
-            Start your<br />
-            <span class="text-warning">journey.</span>
-          </h3>
-
-          <p class="text-white-50 mb-0">
-            Create your account and get your virtual card.
-          </p>
+        <div class="d-flex mt-auto text-white align-center">
+          <!-- Logo -->
+          <img src="/imgs/zanbus_logo.png" alt="Bus" class="mb-2 logo" />
         </div>
       </div>
     </section>
@@ -69,9 +56,8 @@ function submit() {
     <!-- Form section -->
     <section class="form-section bg-white flex-grow-1 px-4 py-4">
       <div class="form-container mx-auto">
-        <div class="mb-4">
-          <h2 class="fw-bold mb-1">Create account</h2>
-
+        <div class="mb-4 text-center">
+          <h2 class="fw-bold mb-1 text-blue2">Create account</h2>
           <p class="text-secondary mb-0">
             We'll create a free virtual bus card for you.
           </p>
@@ -125,7 +111,7 @@ function submit() {
           <!-- Button -->
           <button
             type="submit"
-            class="btn btn-warning btn-lg w-100 rounded-2 py-2 fw-semibold mt-2"
+            class="btn btn-blue btn-lg w-100 rounded-3 py-2 fw-semibold mt-2"
           >
             Create account
             <i class="bi bi-arrow-right ms-2"></i>
@@ -138,7 +124,7 @@ function submit() {
 
           <RouterLink
             to="/auth/login"
-            class="text-success fw-semibold text-decoration-none small ms-1"
+            class="text-green fw-semibold text-decoration-none small ms-1"
           >
             Sign in
           </RouterLink>
@@ -162,7 +148,7 @@ function submit() {
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url("/imgs/bus.jpg");
+  background-image: url("/imgs/bus_bg.png");
   background-size: cover;
   background-position: center;
 }
@@ -170,23 +156,16 @@ function submit() {
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
+  /* background: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 0.3),
     rgba(0, 0, 0, 0.75)
-  );
+  ); */
 }
 
 .logo {
-  width: 56px;
-  height: 56px;
-  backdrop-filter: blur(10px);
-}
-
-.logo img {
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
+  width: 220px;
+  height: 145px;
 }
 
 .form-section {
@@ -207,7 +186,7 @@ function submit() {
 
 .form-control:focus {
   box-shadow: none;
-  border-color: #ffc107;
+  border-color: var(--blue);
 }
 
 .input-group-text {

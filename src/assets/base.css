@@ -1,22 +1,11 @@
-:root {
-  --bg: #f4f6f5;
-  --card: #fff;
-  --tx: #14211c;
-  --mu: #6b7a74;
-  --pr: #1055c9;
-  --pr2: #76c457;
-  --bd: #e1e7e4;
-  --dn: #c0392b;
-}
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f1512;
-    --card: #19211d;
-    --tx: #eaf1ee;
-    --mu: #93a39b;
-    --bd: #27322d;
-  }
+:root {
+  --blue1: #01236e;
+  --blue2: #024c78;
+  --green: #30a01a;
+  --white: #fff;
+  --white2: #f4f6f5;
 }
 
 * {
@@ -36,44 +25,14 @@ body {
   font:
     16px/1.4 system-ui,
     -apple-system,
-    "Segoe UI",
-    Roboto,
+    "Montserrat",
     sans-serif;
+  font-family: "Montserrat", sans-serif !important;
 }
 
 a {
   text-decoration: none;
   color: inherit;
-}
-
-.shell {
-  max-width: 480px;
-  margin: 0 auto;
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  padding-top: env(safe-area-inset-top, 0px);
-}
-
-.pad {
-  padding: 16px;
-  flex: 1;
-  padding-bottom: 96px;
-}
-
-h1 {
-  font-size: 26px;
-  margin: 8px 0;
-}
-
-h2 {
-  font-size: 18px;
-  margin: 18px 0 8px;
-}
-
-p {
-  color: var(--mu);
-  margin: 4px 0 12px;
 }
 
 .muted {
@@ -95,15 +54,36 @@ p {
   cursor: pointer;
 }
 
-.btn.alt {
-  background: var(--pr2);
-  color: var(--tx);
-  border: 1px solid var(--bd);
+.btn-blue {
+  background: var(--blue2) !important;
+  color: var(--white2) !important;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.1) !important;
 }
 
-.btn.dn {
-  background: var(--dn);
+.btn-blue2 {
+  background: var(--blue1) !important;
+  color: var(--white) !important;
 }
+
+.btn-white {
+  background: var(--white) !important;
+  color: var(--blue2) !important;
+}
+
+.text-blue1 {
+  color: var(--blue1) !important;
+}
+
+.text-blue2 {
+  color: var(--blue2) !important;
+}
+
+.text-green {
+  color: var(--green) !important;
+}
+
 
 .btn:disabled {
   opacity: 0.5;

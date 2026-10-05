@@ -58,7 +58,6 @@ const transactions = [
           <div class="d-flex justify-content-between align-items-start mb-4">
             <div>
               <span class="small opacity-75"> Available balance </span>
-
               <h2 class="balance mt-1 mb-0">TSh {{ balance }}</h2>
             </div>
 
@@ -98,13 +97,10 @@ const transactions = [
               <div class="action-icon yellow">
                 <i class="bi bi-plus-lg"></i>
               </div>
-
               <div>
                 <h6 class="fw-bold mb-1">Top up</h6>
-
                 <p class="small text-secondary mb-0">Add money to your card</p>
               </div>
-
               <i class="bi bi-arrow-up-right action-arrow"></i>
             </RouterLink>
           </div>
@@ -115,13 +111,10 @@ const transactions = [
               <div class="action-icon dark">
                 <i class="bi bi-credit-card"></i>
               </div>
-
               <div>
                 <h6 class="fw-bold mb-1">My card</h6>
-
                 <p class="small text-secondary mb-0">View card details</p>
               </div>
-
               <i class="bi bi-arrow-up-right action-arrow"></i>
             </RouterLink>
           </div>
@@ -217,20 +210,14 @@ const transactions = [
 .profile-btn {
   width: 46px;
   height: 46px;
-
   border: 1px solid #e8e8e8;
   border-radius: 50%;
-
   background: #fff;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   font-size: 1.2rem;
-
   box-shadow: 0 5px 18px rgba(0, 0, 0, 0.05);
-
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease;
@@ -317,16 +304,11 @@ const transactions = [
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
   background: #fff;
-
   border: 1px solid #eeeeee;
   border-radius: 20px;
-
   color: #111;
-
   box-shadow: 0 5px 18px rgba(0, 0, 0, 0.035);
-
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
@@ -339,13 +321,10 @@ const transactions = [
 .action-icon {
   width: 42px;
   height: 42px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   border-radius: 13px;
-
   font-size: 1.1rem;
 }
 
@@ -363,9 +342,7 @@ const transactions = [
   position: absolute;
   top: 16px;
   right: 16px;
-
   color: #aaa;
-
   transition:
     transform 0.3s ease,
     color 0.3s ease;
@@ -377,10 +354,8 @@ const transactions = [
 }
 
 /* Travel banner */
-
 .travel-banner {
   min-height: 145px;
-
   background: linear-gradient(
     120deg,
     rgba(17, 17, 17, 0.98),
@@ -390,14 +365,10 @@ const transactions = [
 
 .banner-bus {
   position: absolute;
-
   right: -10px;
   bottom: -20px;
-
   font-size: 8rem;
-
   color: rgba(255, 193, 7, 0.13);
-
   transform: rotate(-8deg);
 }
 
@@ -405,11 +376,8 @@ const transactions = [
 
 .activity-list {
   background: #fff;
-
   border-radius: 20px;
-
   overflow: hidden;
-
   border: 1px solid #eeeeee;
 }
 
