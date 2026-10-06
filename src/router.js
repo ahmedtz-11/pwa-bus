@@ -7,29 +7,24 @@ const routes = [
     path: "/",
     component: () => import("./views/WelcomeView.vue"),
   },
-
   {
     path: "/auth/register",
     component: () => import("./views/Register.vue"),
   },
-
   {
     path: "/auth/login",
     component: () => import("./views/Login.vue"),
   },
-
   {
     path: "/home",
     component: () => import("./views/HomeView.vue"),
     meta: { auth: true },
   },
-
   {
     path: "/topup",
     component: () => import("./views/TopUpView.vue"),
     meta: { auth: true },
   },
-
   {
     path: "/card",
     component: () => import("./views/CardView.vue"),
@@ -45,7 +40,7 @@ const router = createRouter({
 router.beforeEach((to) => {
   const { user } = useAccount();
 
-  // Protected page → send unauthenticated users to welcome
+  // send unauthenticated users to welcome
   if (to.meta.auth && !user.value) {
     return "/";
   }

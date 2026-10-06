@@ -2,20 +2,24 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useForm } from "vee-validate";
-import { useAccount } from "../stores/account";
-import { useToast } from "../composables/useToast";
-import OTPModal from "./modals/OTPModal.vue";
+import { useAccount } from "../../stores/account";
+import { useToast } from "../../composables/useToast";
 
 const router = useRouter();
-const { signIn } = useAccount();
+const { signUp } = useAccount();
 const { show } = useToast();
 
-const showOtp = ref(false);
-const verifying = ref(false);
-const otpError = ref("");
-const sending = ref(false);
+const err = ref("");
 
+// Validation rules (return true when valid, or an error message)
 const validationSchema = {
+  name(value) {
+    const v = (value || "").trim();
+    if (!v) return "Full name is required";
+    if (v.length < 3) return "Name must be at least 3 characters";
+    if (!/^[\p{L}\s'.-]+$/u.test(v)) return "Name contains invalid characters";
+    return true;
+  },
   phone(value) {
     const v = (value || "").replace(/\s+/g, "");
     if (!v) return "Phone number is required";
@@ -27,65 +31,33 @@ const validationSchema = {
   },
 };
 
-const { defineField, handleSubmit, errors, values } = useForm({
+const { defineField, handleSubmit, errors, isSubmitting } = useForm({
   validationSchema,
 });
 
-// once a field has an error, re-validate while typing
-const [phone, phoneAttrs] = defineField("phone", (state) => ({
+// Validate on blur first; once a field has an error, re-validate while typing
+const config = (state) => ({
   validateOnModelUpdate: state.errors.length > 0,
-}));
-
-// replace with your real API call
-async function requestOtp(phoneNumber) {
-  await new Promise((r) => setTimeout(r, 600));
-  return true;
-}
-
-// Step 1: phone is valid -> send OTP -> open modal
-const submit = handleSubmit(async (vals) => {
-  sending.value = true;
-  otpError.value = "";
-
-  try {
-    await requestOtp(vals.phone.replace(/\s+/g, ""));
-    showOtp.value = true;
-  } catch (e) {
-    show(e.message || "Could not send the code. Try again.");
-  } finally {
-    sending.value = false;
-  }
 });
 
-// Step 2: user entered the code in the modal
-async function onVerify(code) {
-  verifying.value = true;
-  otpError.value = "";
+const [name, nameAttrs] = defineField("name", config);
+const [phone, phoneAttrs] = defineField("phone", config);
+
+const submit = handleSubmit((values) => {
+  err.value = "";
 
   try {
-    // TODO: verify the code with your API. signIn now receives the OTP
-    // where it used to receive the password.
-    await signIn(values.phone.replace(/\s+/g, ""), code);
+    signUp({
+      name: values.name.trim(),
+      phone: values.phone.replace(/\s+/g, ""),
+    });
 
-    showOtp.value = false;
-    show("Welcome back!");
+    show("Account created successfully!");
     router.replace("/home");
   } catch (e) {
-    otpError.value = e.message || "Invalid code. Try again.";
-  } finally {
-    verifying.value = false;
+    err.value = e.message;
   }
-}
-
-async function onResend() {
-  otpError.value = "";
-  try {
-    await requestOtp(values.phone.replace(/\s+/g, ""));
-    show("A new code has been sent");
-  } catch (e) {
-    otpError.value = e.message || "Could not resend the code.";
-  }
-}
+});
 </script>
 
 <template>
@@ -120,11 +92,37 @@ async function onResend() {
 
       <div class="form-container position-relative mx-auto">
         <div class="mb-3 text-center">
-          <h3 class="fw-bold mb-1 text-blue2">Welcome back</h3>
-          <p class="text-secondary mb-0">Sign in to continue your journey</p>
+          <h3 class="fw-bold mb-1 text-blue2">Create an account</h3>
+          <p class="text-secondary mb-0">Get a card to start your journey</p>
         </div>
 
         <form @submit.prevent="submit" novalidate>
+          <!-- Name -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold" for="name">Full name</label>
+
+            <div
+              class="input-group input-group-lg field"
+              :class="{ 'is-invalid-group': errors.name }"
+            >
+              <span class="input-group-text bg-light border-end-0">
+                <i class="bi bi-person"></i>
+              </span>
+              <input
+                id="name"
+                v-model="name"
+                v-bind="nameAttrs"
+                type="text"
+                autocomplete="name"
+                class="form-control bg-light border-start-0"
+                placeholder="Your full name"
+              />
+            </div>
+            <!-- <div v-if="errors.name" class="field-error">
+              <i class="bi bi-exclamation-circle me-1"></i>{{ errors.name }}
+            </div> -->
+          </div>
+
           <!-- Phone -->
           <div class="mb-3">
             <label class="form-label fw-semibold" for="phone">
@@ -154,44 +152,35 @@ async function onResend() {
             </div> -->
           </div>
 
+          <!-- Server / signUp error -->
+          <div v-if="err" class="alert alert-danger rounded-3 py-2 small">
+            <i class="bi bi-exclamation-circle me-2"></i>
+            {{ err }}
+          </div>
+
           <!-- Button -->
           <button
             type="submit"
-            :disabled="sending"
+            :disabled="isSubmitting"
             class="btn btn-blue btn-lg w-100 rounded-3 py-2 fw-semibold mt-2"
           >
-            <span
-              v-if="sending"
-              class="spinner-border spinner-border-sm me-2"
-              aria-hidden="true"
-            ></span>
-            {{ sending ? "Sending code..." : "Send code" }}
-            <i v-if="!sending" class="bi bi-arrow-right ms-2"></i>
+            Create account
+            <i class="bi bi-arrow-right ms-2"></i>
           </button>
         </form>
 
-        <!-- Register -->
+        <!-- Login -->
         <div class="text-center mt-4">
-          <span class="text-secondary small">Don't have an account?</span>
+          <span class="text-secondary small">Already have an account?</span>
           <RouterLink
-            to="/auth/register"
+            to="/auth/login"
             class="text-green fw-semibold text-decoration-none small ms-1"
           >
-            Register
+            Sign in
           </RouterLink>
         </div>
       </div>
     </section>
-
-    <!-- OTP modal -->
-    <OTPModal
-      v-model="showOtp"
-      :phone="values.phone || ''"
-      :loading="verifying"
-      :error="otpError"
-      @verify="onVerify"
-      @resend="onResend"
-    />
   </main>
 </template>
 
@@ -228,23 +217,24 @@ async function onResend() {
   height: 135px;
 }
 
-/* ------- Form section ------- */
+/* ---------- Form section ---------- */
 .form-section {
   border-radius: 30px 30px 0 0;
   margin-top: -40px;
   position: relative;
   z-index: 3;
-  overflow: hidden;
+  overflow: hidden; /* clips the overlay to the rounded corners */
 }
 
+/* Overlay image that starts at the bottom of the section */
 .form-overlay {
   position: absolute;
-  inset: auto 0 0 0;
-  height: 55%;
-  background-image: url("/imgs/card_buildings2.png");
+  inset: auto 0 0 0; /* left/right/bottom = 0 */
+  height: 70%;
+  background-image: url("/imgs/card_buildings2.png"); /* <- your image */
   background-repeat: no-repeat;
   background-position: bottom center;
-  background-size: contain;
+  background-size: contain; /* use "cover" to fill the width */
   opacity: 0.7;
   pointer-events: none;
   z-index: 0;
@@ -252,10 +242,10 @@ async function onResend() {
 
 .form-container {
   max-width: 520px;
-  z-index: 1;
+  z-index: 1; /* above the overlay */
 }
 
-/* ------- Inputs ------- */
+/* ---------- Inputs ---------- */
 .form-control,
 .input-group-text {
   border-color: #e9ecef;
@@ -273,6 +263,7 @@ async function onResend() {
   box-shadow: none;
 }
 
+/* Focus: input AND icon get the same border color + glow */
 .field {
   border-radius: 0.5rem;
   transition: box-shadow 0.2s ease;
@@ -285,7 +276,7 @@ async function onResend() {
 .field:focus-within .form-control,
 .field:focus-within .input-group-text {
   border-color: var(--blue);
-  background-color: #fff !important;
+  background-color: #fff !important; /* overrides .bg-light */
 }
 
 .field:focus-within .input-group-text {

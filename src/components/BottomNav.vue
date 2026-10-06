@@ -10,7 +10,7 @@ const tabs = [
   {
     to: "/topup",
     label: "Transactions",
-    icon: "bi-receipt",
+    icon: "bi-list-ul",
     activeIcon: "bi-receipt-cutoff",
   },
   {
