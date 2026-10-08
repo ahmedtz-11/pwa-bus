@@ -85,6 +85,10 @@ async function deactivate() {
     deactivating.value = false;
   }
 }
+
+const goBack = () => {
+  router.go(-1);
+};
 </script>
 
 <template>
@@ -99,22 +103,20 @@ async function deactivate() {
         <div
           class="top-bar position-relative d-flex align-items-center justify-content-center"
         >
-          <RouterLink
-            to="/home"
-            class="back-link position-absolute start-0 text-white text-decoration-none fw-bold"
+          <button
+            @click="goBack"
+            class="back-link position-absolute start-0 text-white text-decoration-none fw-bold border-0 bg-transparent"
             aria-label="Back"
           >
             <i class="bi bi-arrow-left"></i>
-          </RouterLink>
+          </button>
 
           <img src="/imgs/zanbus_white.png" alt="Bus" class="logo" />
         </div>
 
         <div class="text-center mt-3">
           <h5 class="fw-semibold mb-1 text-white">Account Information</h5>
-          <p class="small fw-semibold">
-            View and manage your account details
-          </p>
+          <p class="small fw-semibold">View and manage your account details</p>
         </div>
       </div>
     </section>

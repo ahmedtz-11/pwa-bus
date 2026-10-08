@@ -159,7 +159,7 @@ const submit = handleSubmit((values) => {
             :disabled="isSubmitting"
             class="btn btn-blue btn-lg w-100 rounded-3 py-2 fw-semibold mt-2"
           >
-            Create account
+            Register
             <i class="bi bi-arrow-right ms-2"></i>
           </button>
         </form>

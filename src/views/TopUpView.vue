@@ -170,7 +170,7 @@ const submit = handleSubmit(async (vals) => {
             :aria-selected="tab === 'mine'"
             @click="setTab('mine')"
           >
-            <i class="bi bi-credit-card-2-front me-2"></i>My card
+            <i class="bi bi-credit-card-2-front me-2"></i>My cards
           </button>
 
           <button
@@ -181,7 +181,7 @@ const submit = handleSubmit(async (vals) => {
             :aria-selected="tab === 'other'"
             @click="setTab('other')"
           >
-            <i class="bi bi-send me-2"></i>Another card
+            <i class="bi bi-send me-2"></i>Other card
           </button>
         </div>
 

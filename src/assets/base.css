@@ -36,8 +36,8 @@ a {
   color: inherit;
 }
 
-.muted {
-  color: var(--mu);
+.hero {
+  border-radius: 0px !important;
 }
 
 .btn {

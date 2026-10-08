@@ -18,10 +18,10 @@ export default defineConfig({
         orientation: "portrait",
         start_url: "/",
         icons: [
-          { src: "/imgs/zanbus_blue.png", sizes: "192x192", type: "image/png" },
-          { src: "/imgs/zanbus_blue.png", sizes: "512x512", type: "image/png" },
+          { src: "/imgs/zanbus192.png", sizes: "192x192", type: "image/png" },
+          { src: "/imgs/zanbus512.png", sizes: "512x512", type: "image/png" },
           {
-            src: "/imgs/zanbus_blue.png",
+            src: "/imgs/zanbus512.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",
@@ -35,3 +35,4 @@ export default defineConfig({
     outDir: "dist",
   },
 });
+// rgb(1 40 78)

@@ -1,4 +1,11 @@
 <script setup>
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const goBack = () => {
+  router.go(-1);
+};
+
 const steps = [
   "Register with your full name and phone number. Your ZanBus card is created for you right away.",
   "To sign in, enter your phone number, then the 6-digit code we send you. No password to remember.",
@@ -23,13 +30,13 @@ const steps = [
         <div
           class="top-bar position-relative d-flex align-items-center justify-content-center"
         >
-          <RouterLink
-            to="/home"
-            class="back-link position-absolute start-0 text-white text-decoration-none fw-bold"
+          <button
+            @click="goBack"
+            class="back-link position-absolute start-0 text-white text-decoration-none fw-bold border-0 bg-transparent"
             aria-label="Back"
           >
             <i class="bi bi-arrow-left"></i>
-          </RouterLink>
+          </button>
 
           <img src="/imgs/zanbus_white.png" alt="Bus" class="logo" />
         </div>
@@ -165,7 +172,7 @@ const steps = [
   width: 56px;
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--blue2);
+  color: var(--blue1);
   background: #fff;
   border: 1px solid #ddd;
   border-right: 0;
@@ -213,13 +220,13 @@ const steps = [
 }
 
 .secure-title {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: #1055c9;
 }
 
 .secure-text {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   line-height: 1.35;
   color: var(--blue1);
 }
