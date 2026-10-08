@@ -108,8 +108,8 @@ const { hasAccount } = useAccount();
 }
 
 .logo {
-  width: 220px;
-  height: 145px;
+  width: 145px;
+  height: 45px;
 }
 
 .btn {

@@ -8,13 +8,13 @@ const tabs = [
     activeIcon: "bi-house-fill",
   },
   {
-    to: "/topup",
+    to: "/transactions",
     label: "Transactions",
     icon: "bi-list-ul",
-    activeIcon: "bi-receipt-cutoff",
+    activeIcon: "bi-list-ul",
   },
   {
-    to: "/card",
+    to: "/settings",
     label: "Settings",
     icon: "bi-gear",
     activeIcon: "bi-gear-fill",
@@ -78,7 +78,7 @@ const tabs = [
   align-items: center;
   justify-content: center;
   gap: 2px;
-  color: #666;
+  color: #555;
   text-decoration: none;
   border-radius: 17px;
   transition:
@@ -125,7 +125,7 @@ const tabs = [
 /* Active state */
 .nav-item.active {
   color: #1055c9;
-  background: #cbddfd;
+  /* color: var(--blue2); */
 }
 
 .nav-item.active .icon-default {

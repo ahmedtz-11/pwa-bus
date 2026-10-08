@@ -224,8 +224,8 @@ async function onResend() {
 }
 
 .logo {
-  width: 230px;
-  height: 135px;
+  width: 145px;
+  height: 45px;
 }
 
 /* ------- Form section ------- */

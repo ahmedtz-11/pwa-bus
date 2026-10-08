@@ -30,6 +30,31 @@ const routes = [
     component: () => import("./views/CardView.vue"),
     meta: { auth: true },
   },
+  {
+    path: "/account",
+    component: () => import("./views/AccountInfo.vue"),
+    meta: { auth: true },
+  },
+  {
+    path: "/settings",
+    component: () => import("./views/SettingsView.vue"),
+    meta: { auth: true },
+  },
+  {
+    path: "/transactions",
+    component: () => import("./views/TransactionsView.vue"),
+    meta: { auth: true },
+  },
+  {
+    path: "/faq",
+    component: () => import("./views/FAQs.vue"),
+    meta: { auth: true },
+  },
+  {
+    path: "/guide",
+    component: () => import("./views/UserGuide.vue"),
+    meta: { auth: true },
+  },
 ];
 
 const router = createRouter({

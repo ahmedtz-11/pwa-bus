@@ -9,6 +9,6 @@ const route = useRoute();
   <div class="shell">
     <ToastMessage />
     <RouterView />
-    <BottomNav v-if="route.meta.auth" />
+    <!-- <BottomNav v-if="route.meta.auth" /> -->
   </div>
 </template>
