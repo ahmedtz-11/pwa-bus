@@ -3,7 +3,9 @@ import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAccount } from "../stores/account";
 import { useToast } from "../composables/useToast";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const router = useRouter();
 const { user, signOut, deactivateAccount } = useAccount();
 const { show } = useToast();
@@ -26,19 +28,19 @@ const items = computed(() => [
   {
     key: "name",
     icon: "bi-person",
-    label: "Account holder name",
+    label: t("user.account_info.label_1"),
     value: user.value?.name || "—",
   },
   {
     key: "phone",
     icon: "bi-phone",
-    label: "Phone number",
+    label: t("user.account_info.label_2"),
     value: phone.value || "—",
   },
   {
     key: "cards",
     icon: "bi-credit-card",
-    label: "Registered cards",
+    label: t("user.account_info.label_3"),
     value: user.value?.cardNo ? "1 card" : "No card",
     sub: user.value?.cardNo
       ? `•••• ${user.value.cardNo.slice(-4)} · ${
@@ -49,7 +51,7 @@ const items = computed(() => [
   {
     key: "status",
     icon: "bi-shield-check",
-    label: "Account status",
+    label: t("user.account_info.label_4"),
     value: status.value.charAt(0).toUpperCase() + status.value.slice(1),
     tone: status.value === "active" ? "ok" : "bad",
   },
@@ -115,8 +117,8 @@ const goBack = () => {
         </div>
 
         <div class="text-center mt-3">
-          <h5 class="fw-semibold mb-1 text-white">Account Information</h5>
-          <p class="small fw-semibold">View and manage your account details</p>
+          <h5 class="fw-semibold mb-1 text-white">{{ t("user.account_info.title") }}</h5>
+          <p class="small fw-semibold">{{ t("user.account_info.subtitle") }}</p>
         </div>
       </div>
     </section>
@@ -162,7 +164,7 @@ const goBack = () => {
             aria-hidden="true"
           ></span>
           <i v-else class="bi bi-box-arrow-right ms-2"></i>
-          Logout
+          {{ t("user.account_info.btn_1") }}
         </button>
 
         <!-- Deactivate: button first, then a confirmation step -->
@@ -174,7 +176,7 @@ const goBack = () => {
           @click="confirming = true"
         >
           <i class="bi bi-person-slash ms-2"></i>
-          Deactivate Account
+          {{ t("user.account_info.btn_2") }}
         </button>
 
         <div v-else class="confirm-box rounded-3 mt-2 p-3">

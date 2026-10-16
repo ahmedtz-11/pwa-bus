@@ -5,7 +5,9 @@ import { useForm } from "vee-validate";
 import { useAccount } from "../stores/account";
 import { useToast } from "../composables/useToast";
 import OTPModal from "./modals/OTPModal.vue";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const router = useRouter();
 const { signIn } = useAccount();
 const { show } = useToast();
@@ -120,15 +122,15 @@ async function onResend() {
 
       <div class="form-container position-relative mx-auto">
         <div class="mb-3 text-center">
-          <h3 class="fw-bold mb-1 text-blue2">Welcome back</h3>
-          <p class="text-secondary mb-0">Sign in to continue your journey</p>
+          <h3 class="fw-bold mb-1 text-blue2">{{ t("home.login.title") }}</h3>
+          <p class="text-secondary mb-0">{{ t("home.login.subtitle") }}</p>
         </div>
 
         <form @submit.prevent="submit" novalidate>
           <!-- Phone -->
           <div class="mb-3">
             <label class="form-label fw-semibold" for="phone">
-              Phone number
+              {{ t("home.login.label_1") }}
             </label>
 
             <div
@@ -165,19 +167,19 @@ async function onResend() {
               class="spinner-border spinner-border-sm me-2"
               aria-hidden="true"
             ></span>
-            {{ sending ? "Sending code..." : "Send code" }}
+            {{ sending ? "Sending code..." : t("home.login.btn") }}
             <i v-if="!sending" class="bi bi-arrow-right ms-2"></i>
           </button>
         </form>
 
         <!-- Register -->
         <div class="text-center mt-4">
-          <span class="text-secondary small">Don't have an account?</span>
+          <span class="text-secondary small">{{ t("home.login.label_2") }}</span>
           <RouterLink
             to="/auth/register"
             class="text-green fw-semibold text-decoration-none small ms-1"
           >
-            Register
+            {{ t("home.welcome.register") }}
           </RouterLink>
         </div>
       </div>

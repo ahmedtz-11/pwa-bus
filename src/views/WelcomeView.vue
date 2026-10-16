@@ -1,7 +1,7 @@
 <script setup>
-import { useAccount } from "../stores/account";
+import { useI18n } from "vue-i18n";
 
-const { hasAccount } = useAccount();
+const { t } = useI18n();
 </script>
 
 <template>
@@ -31,12 +31,12 @@ const { hasAccount } = useAccount();
           </span> -->
 
           <h1 class="display-4 fw-bold lh-1 mb-3 text-center text-blue2">
-            People Move <br /><span class="text-green">A Cleaner </span>
+            {{ t("home.welcome.label_1") }} <br /><span class="text-green">{{ t("home.welcome.label_2") }} </span>
             Zanzibar
           </h1>
 
           <p class="text-lead text-white mb-0 text-center">
-            Top up, ride, and manage your bus card right from your phone.
+            {{ t("home.welcome.label_4") }}
           </p>
         </div>
       </div>
@@ -49,21 +49,21 @@ const { hasAccount } = useAccount();
             class="btn btn-blue btn-lg rounded-4 fw-semibold py-3 shadow"
           >
             <i class="bi bi-credit-card me-2"></i>
-            I have a physical card
+            {{ t("home.welcome.btn_1") }}
           </RouterLink>
 
           <RouterLink
             to="/auth/register"
             class="btn btn-white btn-lg rounded-4 fw-semibold py-3"
           >
-            I don't have a card,
-            <span class="text-green"> Register</span>
+            {{ t("home.welcome.btn_2") }},
+            <span class="text-green"> {{ t("home.welcome.register") }}</span>
           </RouterLink>
         </div>
 
         <!-- Bottom indicator -->
         <div class="text-center mt-4">
-          <span class="small text-white-50">Powered by Rahisi</span>
+          <span class="small text-white-50">{{ t("home.welcome.powered_by") }} Rahisi</span>
         </div>
       </div>
     </section>

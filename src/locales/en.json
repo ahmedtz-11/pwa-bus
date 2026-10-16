@@ -1,0 +1,183 @@
+{
+  "home": {
+    "welcome": {
+      "label_1": "People Move",
+      "label_2": "A Cleaner",
+      "label_3": "Zanzibar",
+      "label_4": "Top up, ride, and manage your bus card right from your phone.",
+      "btn_1": "I have a physical card",
+      "btn_2": "I don't have a card",
+      "register": "Register",
+      "login": "Login",
+      "powered_by": "Powered by"
+    },
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to continue your journey",
+      "label_1": "Phone number",
+      "label_2": "Don't have an account?",
+      "btn": "Send code",
+      "otp_modal": {
+        "title": "Enter OTP",
+        "subtitle": "Enter the 4-digit code sent to your device",
+        "label_1": "Didn't get the code?",
+        "label_2": "Resend OTP",
+        "btn": "Verify OTP"
+      }
+    },
+    "register": {
+      "title": "Create an account",
+      "subtitle": "Get a card to start your journey",
+      "label_1": "Full name",
+      "holder_1": "Your full name",
+      "label_2": "Phone number",
+      "holder_2": "Phone number",
+      "label_3": "Already have an account?",
+      "label_4": "Sign in"
+    }
+  },
+  "user": {
+    "menu": {
+      "home": "Home",
+      "transactions": "Transactions",
+      "settings": "Settings"
+    },
+    "home": {
+      "flip": "Tap the card to flip",
+      "title": "Quick actions",
+      "label_1": "Top Up",
+      "holder_1": "Add balance to your card",
+      "label_2": "Use Card",
+      "holder_2": "Scan code to take the ride",
+      "label_3": "Report Loss",
+      "holder_3": "Report a lost or stolen card",
+      "title2": "Travel Smart, Travel Easy",
+      "subtitle": "Use ZanBus for a faster, safer and more convenient journey"
+    },
+    "account_info": {
+      "title": "Account Information",
+      "subtitle": "View and manage your account details",
+      "label_1": "Account holder name",
+      "label_2": "Phone number",
+      "label_3": "Registered cards",
+      "label_4": "Account status",
+      "btn_1": "Logout",
+      "btn_2": "Deactivate Account"
+    },
+    "topup": {
+      "title": "Top Up",
+      "subtitle": "Simplify your journeys",
+      "subtitle2": "Enter your YAS number",
+      "tab_1": "My cards",
+      "tab_2": "Other card",
+      "label_1": "Select card",
+      "label_2": "Amount",
+      "label_3": "Card number",
+      "btn_1": "Proceed to Payment",
+      "title_2": "Safe & Secure",
+      "subtitle_2": "Your payment is protected with secure encryption."
+    },
+    "use_card": {
+      "title": "Use Your Card",
+      "subtitle": "Show your QR code or tap ypur card to travel on the bus.",
+      "tab_1": {
+        "label": "QR Code",
+        "title": "Travel with QR",
+        "subtitle": "Show this QR code to the bus conductor to scan and travel.",
+        "label_1": "QR Code is ready to scan",
+        "label_2": "Card Balance"
+      },
+      "tab_2": "NFC (Coming Soon)",
+      "title_2": "Safe & Secure",
+      "subtitle_2": "Your journeys are secure and your card information is protected."
+    },
+    "report": {
+      "title": "Report Lost Card",
+      "subtitle": "Report your physical card as lost. The card will be blocked immediately.",
+      "label_1": "Select Card",
+      "holder_1": "Select the physical card you want to report as lost",
+      "label_2": "Important",
+      "holder_2": "The lost card will be replaced at the GRT Main Office in Kijangwani",
+      "label_3": "Confirm and Submit",
+      "holder_3": "Please confirm that you want to report this card as lost",
+      "warning_title": "This action cannot be undone.",
+      "warning_subtitle": "Once reported, the card will be permanently blocked and cannot be used again.",
+      "confirm": "I confirm that I want to report this card as lost and I understand it will be blocked permanently.",
+      "btn_1": "Report Card as Lost",
+      "btn_2": "Cancel"
+    },
+    "transactions": {
+      "title": "Transactions",
+      "subtitle": "View your card activity and history",
+      "label_1": "Current Card",
+      "label_2": "Latest Transactions",
+      "label_3": "Filter Transactions",
+      "btn_1": "Reset",
+      "btn_2": "Apply"
+    },
+    "notification": {
+      "title": "Notification",
+      "subtitle": "Stay updated on your card activity"
+    },
+    "guide": {
+      "title": "User Guide",
+      "subtitle": "A complete guide to using ZanBus",
+      "label_1": "Guide",
+      "label_2": "From account setup to everyday travel",
+      "desc_1": "Register with your full name and phone number. Your ZanBus card is created for you right away.",
+      "desc_2": "To sign in, enter your phone number, then the 6-digit code we send you. No password to remember.",
+      "desc_3": "On the home page, tap your card to flip it. Use the eye icon to show or hide your balance.",
+      "desc_4": "Tap Top Up, choose your own card or another card, enter an amount, then proceed to payment.",
+      "desc_5": "When you board, open Use Card and scan the code to take the ride.",
+      "desc_6": "Open Transaction history in Settings to see your top-ups and rides at any time.",
+      "desc_7": "If your card is lost or stolen, tap Report Loss on the home page right away.",
+      "desc_8": "Need a hand? Visit Help & Support in Settings to read the help center, contact the team or report a problem."
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Manage your preferences and account",
+      "transactions": {
+        "title": "Transactions",
+        "label_1": "Transaction history",
+        "holder_1": "View all your card transactions"
+      },
+      "preferences": {
+        "title": "Preferences",
+        "label_1": "Language",
+        "holder_1": "Choose the app language",
+        "label_2": "Notifications",
+        "holder_2": "Manage your notification preferences",
+        "label_3": "Biometric Login",
+        "holder_3": "Use Face ID or fingerprints fo faster login",
+        "label_4": "App Theme",
+        "holder_4": "Choose the app appearance",
+        "dark": "Dark",
+        "light": "Light"
+      },
+      "support": {
+        "title": "Help & Support",
+        "label_1": "FAQs",
+        "holder_1": "Answers to common questions",
+        "label_2": "Help Center",
+        "holder_2": "Call or email our team",
+        "label_3": "User Guide",
+        "holder_3": "A complete guide to using ZanBus app"
+      },
+      "account": {
+        "title": "account",
+        "label_1": "Account Information",
+        "holder_1": "View your account details",
+        "label_2": "Logout",
+        "holder_2": "Sign out of this device",
+        "btn_1": "Logout",
+        "btn_2": "Cancel"
+      },
+      "about": {
+        "title": "About ZanBus",
+        "desc_1": "ZanBus is Zanzibar's modern public bus service, amking everyday travel simple, reliable and convenient.",
+        "desc_2": "AThe ZanBus app gives passengers an easier way to travel- manage physical or virtual travel cards, check balances, top up, pay for journeys using QR, view transactions and manage their travel account.",
+        "desc_3": "One card. One app. Easier journeys across Zanzibar."
+      }
+    }
+  }
+}

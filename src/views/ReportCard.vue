@@ -1,361 +1,459 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
+import { useForm } from "vee-validate";
 import { useAccount } from "../stores/account";
 import { useToast } from "../composables/useToast";
+import BottomNav from "../components/BottomNav.vue";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const router = useRouter();
-const { user, signOut, deactivateAccount } = useAccount();
+const { user, reportCardLost } = useAccount();
 const { show } = useToast();
 
-const loggingOut = ref(false);
-const deactivating = ref(false);
-const confirming = ref(false); // shows the "are you sure?" panel
+// Go back, or home if the page was opened directly
+const goBack = () =>
+  window.history.length > 1 ? router.back() : router.replace("/home");
 
-const busy = computed(() => loggingOut.value || deactivating.value);
-
-// 0712345678 -> 0712 345 678
-const phone = computed(() =>
-  (user.value?.phone || "").replace(/^(\d{4})(\d{3})(\d{3})$/, "$1 $2 $3"),
+// Only physical cards can be reported as lost
+const cards = computed(() =>
+  user.value?.cardNo && user.value.physical
+    ? [
+        {
+          value: user.value.cardNo,
+          label: `•••• ${user.value.cardNo.slice(-6)}`,
+        },
+      ]
+    : [],
 );
 
-const status = computed(() => user.value?.status || "unknown");
+const defaultCard = computed(() => cards.value[0]?.value || "");
+const alreadyBlocked = computed(() => user.value?.status === "blocked");
 
-// The four info cards
-const items = computed(() => [
-  {
-    key: "name",
-    icon: "bi-person",
-    label: "Account holder name",
-    value: user.value?.name || "—",
+// Validation rules (return true when valid, or an error message)
+const validationSchema = {
+  card(value) {
+    const v = (value || "").replace(/\s+/g, "");
+    if (!v) return "Select the card you want to report";
+    if (!/^\d{16}$/.test(v)) return "Card number must be 16 digits";
+    return true;
   },
-  {
-    key: "phone",
-    icon: "bi-phone",
-    label: "Phone number",
-    value: phone.value || "—",
+  confirm(value) {
+    return value === true || "Please confirm to continue";
   },
-  {
-    key: "cards",
-    icon: "bi-credit-card",
-    label: "Registered cards",
-    value: user.value?.cardNo ? "1 card" : "No card",
-    sub: user.value?.cardNo
-      ? `•••• ${user.value.cardNo.slice(-4)} · ${
-          user.value.physical ? "Physical" : "Virtual"
-        }`
-      : "",
-  },
-  {
-    key: "status",
-    icon: "bi-shield-check",
-    label: "Account status",
-    value: status.value.charAt(0).toUpperCase() + status.value.slice(1),
-    tone: status.value === "active" ? "ok" : "bad",
-  },
-]);
+};
 
-async function logout() {
-  if (busy.value) return;
-  loggingOut.value = true;
+const { defineField, handleSubmit, errors, isSubmitting } = useForm({
+  validationSchema,
+  initialValues: { card: defaultCard.value, confirm: false },
+});
 
+// once a field has an error, re-validate while typing
+const config = (state) => ({
+  validateOnModelUpdate: state.errors.length > 0,
+});
+
+const [card, cardAttrs] = defineField("card", config);
+const [confirm, confirmAttrs] = defineField("confirm", config);
+
+const canSubmit = computed(
+  () => cards.value.length > 0 && !alreadyBlocked.value && !isSubmitting.value,
+);
+
+const submit = handleSubmit(async (vals) => {
   try {
-    await signOut();
-    show("You have been logged out");
-    router.replace("/");
+    await reportCardLost(vals.card);
+    show("Card reported as lost and blocked");
+    router.replace("/home");
   } catch (e) {
-    show(e.message || "Could not log out. Try again.");
-  } finally {
-    loggingOut.value = false;
+    show(e.message || "Could not report the card. Try again.");
   }
-}
-
-async function deactivate() {
-  if (busy.value) return;
-  deactivating.value = true;
-
-  try {
-    await deactivateAccount();
-    show("Your account has been deactivated");
-    router.replace("/");
-  } catch (e) {
-    show(e.message || "Could not deactivate the account. Try again.");
-    confirming.value = false;
-  } finally {
-    deactivating.value = false;
-  }
-}
+});
 </script>
 
 <template>
-  <main class="auth-page min-vh-100 d-flex flex-column">
-    <!-- Image section -->
-    <section class="hero position-relative">
-      <div class="hero-bg"></div>
-      <div class="hero-overlay"></div>
-
-      <div class="position-relative z-2 h-100 p-3">
-        <!-- Top bar: back button (left) + logo (center) -->
-        <div
-          class="top-bar position-relative d-flex align-items-center justify-content-center"
+  <main class="home-page min-vh-100">
+    <div class="home-container px-3 pt-4">
+      <!-- Header -->
+      <header class="d-flex align-items-center justify-content-between mb-2">
+        <button
+          type="button"
+          class="profile-btn"
+          aria-label="Back"
+          @click="goBack"
         >
-          <RouterLink
-            to="/home"
-            class="back-link position-absolute start-0 text-white text-decoration-none fw-bold"
-            aria-label="Back"
-          >
-            <i class="bi bi-arrow-left"></i>
-          </RouterLink>
+          <i class="bi bi-arrow-left"></i>
+        </button>
 
-          <img src="/imgs/zanbus_white.png" alt="Bus" class="logo" />
-        </div>
+        <img src="/imgs/zanbus_logo.png" alt="ZanBus" class="logo" />
 
-        <div class="text-center mt-3">
-          <h5 class="fw-semibold mb-1 text-white">Account Information</h5>
-          <p class="small fw-semibold">
-            View and manage your account details
+        <RouterLink
+          to="/notification"
+          class="profile-btn"
+          aria-label="Notifications"
+        >
+          <i class="bi bi-bell"></i>
+        </RouterLink>
+      </header>
+
+      <!-- Intro -->
+      <section class="rounded-4 p-3 d-flex align-items-center gap-3">
+        <div class="min-w-0">
+          <h6 class="fw-bold text-dark mb-1">{{ t("user.report.title") }}</h6>
+          <p class="small mb-0">
+            {{ t("user.report.subtitle") }}
           </p>
         </div>
-      </div>
-    </section>
+        <i class="bi bi-exclamation-triangle warning-icon"></i>
+      </section>
 
-    <!-- Details section -->
-    <section class="form-section bg-white flex-grow-1 px-4 py-4">
-      <!-- Decorative overlay image anchored to the bottom -->
-      <div class="form-overlay" aria-hidden="true"></div>
+      <form novalidate @submit.prevent="submit">
+        <!-- Step 1 -->
+        <div class="white-banner mb-2">
+          <span class="white-icon">
+            <i class="bi bi-1-circle-fill"></i>
+          </span>
+          <div class="flex-grow-1 min-w-0">
+            <h6 class="fw-bold text-dark mb-1">{{ t("user.report.label_1") }}</h6>
+            <div class="small text-muted mb-2">
+              {{ t("user.report.holder_1") }}
+            </div>
 
-      <div class="form-container position-relative mx-auto">
-        <!-- Info cards -->
-        <div class="info-list mb-3">
-          <div v-for="item in items" :key="item.key" class="info-card">
-            <span class="info-icon">
-              <i class="bi" :class="item.icon"></i>
-            </span>
+            <div v-if="alreadyBlocked" class="notice mb-2">
+              <i class="bi bi-slash-circle me-1"></i>
+              Your card is already blocked.
+            </div>
 
-            <div class="info-body">
-              <span class="info-label">{{ item.label }}</span>
-              <span
-                class="info-value"
-                :class="{
-                  'tone-ok': item.tone === 'ok',
-                  'tone-bad': item.tone === 'bad',
-                }"
+            <div class="mb-1">
+              <div
+                class="input-group input-group-lg field"
+                :class="{ 'is-invalid-group': errors.card }"
               >
-                {{ item.value }}
+                <span class="input-group-text bg-light border-end-0">
+                  <i class="bi bi-credit-card"></i>
+                </span>
+                <select
+                  id="card"
+                  v-model="card"
+                  v-bind="cardAttrs"
+                  class="form-select bg-light border-start-0"
+                  :disabled="!cards.length || alreadyBlocked"
+                >
+                  <option value="" disabled>
+                    {{
+                      cards.length
+                        ? "Select a card"
+                        : "No physical cards available"
+                    }}
+                  </option>
+                  <option v-for="c in cards" :key="c.value" :value="c.value">
+                    {{ c.label }}
+                  </option>
+                </select>
+              </div>
+
+              <div v-if="errors.card" class="field-error">
+                <i class="bi bi-exclamation-circle me-1"></i>{{ errors.card }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="white-banner mb-2">
+          <span class="white-icon">
+            <i class="bi bi-2-circle-fill"></i>
+          </span>
+          <div class="flex-grow-1 min-w-0">
+            <h6 class="fw-bold text-dark mb-1">{{ t("user.report.label_2") }}</h6>
+            <div class="small text-muted mb-2">
+              {{ t("user.report.holder_2") }}
+            </div>
+
+            <div class="secure-banner">
+              <span class="secure-icon">
+                <i class="bi bi-shield-shaded"></i>
               </span>
+              <div>
+                <h6 class="fw-bold text-danger mb-1">
+                  {{ t("user.report.warning_title") }}
+                </h6>
+                <div class="small text-muted">
+                  {{ t("user.report.warning_subtitle") }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="white-banner mb-3">
+          <span class="white-icon">
+            <i class="bi bi-3-circle-fill"></i>
+          </span>
+          <div class="flex-grow-1 min-w-0">
+            <h6 class="fw-bold text-dark mb-1">{{ t("user.report.label_3") }}</h6>
+            <div class="small text-muted">
+              {{ t("user.report.holder_3") }}
+            </div>
+
+            <div class="form-check confirm-check mt-2">
+              <input
+                id="confirm"
+                v-model="confirm"
+                v-bind="confirmAttrs"
+                type="checkbox"
+                class="form-check-input"
+                :class="{ 'is-invalid': errors.confirm }"
+                :disabled="!cards.length || alreadyBlocked"
+              />
+              <!-- :disabled="!cards.length || alreadyBlocked" -->
+              <label class="form-check-label small" for="confirm">
+                {{ t("user.report.confirm") }}
+              </label>
+            </div>
+
+            <div v-if="errors.confirm" class="field-error">
+              <i class="bi bi-exclamation-circle me-1"></i>{{ errors.confirm }}
             </div>
           </div>
         </div>
 
         <!-- Actions -->
         <button
-          type="button"
-          :disabled="busy"
+          type="submit"
+          :disabled="!canSubmit"
           class="btn btn-primary btn-md w-100 rounded-3 py-2 fw-semibold mt-2"
-          @click="logout"
         >
           <span
-            v-if="loggingOut"
+            v-if="isSubmitting"
             class="spinner-border spinner-border-sm me-2"
             aria-hidden="true"
           ></span>
-          <i v-else class="bi bi-box-arrow-right ms-2"></i>
-          Logout
+          <i v-else class="bi bi-exclamation-triangle-fill ms-2"></i>
+          {{ t("user.report.btn_1") }}
         </button>
 
-        <!-- Deactivate: button first, then a confirmation step -->
         <button
-          v-if="!confirming"
           type="button"
-          :disabled="busy"
-          class="btn btn-outline-danger btn-md w-100 rounded-3 py-2 fw-semibold mt-1"
-          @click="confirming = true"
+          :disabled="isSubmitting"
+          class="btn btn-outline-primary btn-md w-100 rounded-3 py-2 fw-semibold mt-1"
+          @click="goBack"
         >
-          <i class="bi bi-person-slash ms-2"></i>
-          Deactivate Account
+          {{ t("user.report.btn_2") }}
         </button>
+      </form>
+    </div>
 
-        <div v-else class="confirm-box rounded-3 mt-2 p-3">
-          <p class="small mb-3">
-            <i class="bi bi-exclamation-triangle-fill text-danger me-1"></i>
-            <strong>Deactivate your account?</strong> Your card will stop
-            working and you will be signed out.
-          </p>
-
-          <div class="d-flex gap-2">
-            <button
-              type="button"
-              class="btn btn-light btn-md flex-fill rounded-3 fw-semibold"
-              :disabled="deactivating"
-              @click="confirming = false"
-            >
-              Cancel
-            </button>
-
-            <button
-              type="button"
-              class="btn btn-danger btn-md flex-fill rounded-3 fw-semibold"
-              :disabled="busy"
-              @click="deactivate"
-            >
-              <span
-                v-if="deactivating"
-                class="spinner-border spinner-border-sm me-2"
-                aria-hidden="true"
-              ></span>
-              Yes, deactivate
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- Bottom navigation -->
+    <BottomNav />
   </main>
 </template>
 
 <style scoped>
-.auth-page {
-  background: #fff;
-  overflow: hidden;
-}
-
 .small {
-  font-size: 0.7rem !important;
-  color: #aaa !important;
+  font-size: 0.8rem !important;
+  color: #555 !important;
+  font-weight: 500;
 }
 
-.hero {
-  height: 28vh;
-  overflow: hidden;
+.home-page {
+  background: #f7f7f5;
+  color: #111;
+  overflow-x: hidden;
 }
 
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  background-image: url("/imgs/topup_bg.png");
-  background-size: cover;
-  background-position: center;
-}
-
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.01);
-}
-
-.top-bar {
-  min-height: 50px;
+.home-container {
+  max-width: 520px;
+  margin: 0 auto;
+  padding-bottom: 110px; /* space for the fixed bottom nav */
 }
 
 .logo {
-  width: 135px;
-  height: 40px;
+  height: 35px;
+  width: 115px;
 }
 
-/* ------- Details section ------- */
-.form-section {
-  border-radius: 30px 30px 0 0;
-  margin-top: -40px;
-  position: relative;
-  z-index: 3;
-  overflow: hidden;
-}
-
-.form-overlay {
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 55%;
-  background-image: url("/imgs/card_buildings2.png");
-  background-repeat: no-repeat;
-  background-position: bottom center;
-  background-size: contain;
-  opacity: 0.7;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.form-container {
-  max-width: 520px;
-  z-index: 1;
-}
-
-/* ------- Info cards (same look as the old inputs) ------- */
-.info-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.info-card {
-  display: flex;
-  align-items: stretch;
-  border-radius: 0.6rem;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.03);
-}
-
-.info-icon {
-  flex: 0 0 auto;
+.profile-btn {
+  width: 46px;
+  height: 46px;
+  border: none;
+  border-radius: 14px;
+  background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  font-size: 1.25rem;
-  color: var(--blue2);
-  /* background: #f8f9fa; */
-  /* border: 1px solid #e9ecef; */
-  border: 1px solid #ddd;
-  border-right: 0;
-  border-radius: 0.5rem 0 0 0.5rem;
+  font-size: 1.4rem;
+  color: #444;
+  text-decoration: none;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.05);
+  transition: transform 0.25s ease;
 }
 
-.info-body {
-  flex: 1 1 auto;
+.profile-btn:active {
+  transform: scale(0.9);
+}
+
+.min-w-0 {
   min-width: 0;
+}
+
+.warning-icon {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  margin: 0.25rem auto 0.5rem;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  padding: 0.6rem 1rem 0.6rem 0.25rem;
-  /* background: #f8f9fa; */
-  border: 1px solid #ddd;
-  border-left: 0;
-  border-radius: 0 0.5rem 0.5rem 0;
+  color: #ee2222;
+  font-size: 1.25rem;
+  border-radius: 50%;
+  background: #ffd9d9;
 }
 
-.info-label {
-  font-size: 0.72rem;
-  color: #555;
-  letter-spacing: 0.02em;
+/* ------- Step rows ------- */
+.white-banner {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.5rem;
 }
 
-.info-value {
-  font-size: 1rem;
+.white-icon {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1055c9;
+  font-size: 1.3rem;
+}
+
+.notice {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  background: #fff3cd;
+  color: #664d03;
+  font-size: 0.8rem;
   font-weight: 600;
-  color: #222;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.info-sub {
-  font-size: 0.75rem;
-  color: #6c757d;
+/* ------- Info banner ------- */
+.secure-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem;
+  background: #fae6e6;
+  border: 1px solid #fdbdbd;
+  border-radius: 0.75rem;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.05);
 }
 
-.status-dot {
-  font-size: 0.5rem;
-  vertical-align: middle;
-  margin-right: 0.25rem;
+.secure-banner h6 {
+  font-size: 0.8rem !important;
 }
 
-.tone-ok {
-  color: #198754;
+.secure-icon {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ee2222;
+  font-size: 1.3rem;
 }
 
-.tone-bad {
+/* ------- Confirm checkbox ------- */
+.confirm-check{
+  display: flex;
+  gap: 0.4rem;
+  background: #e2eafc;
+  padding: 0.6rem;
+  border: 1px solid #bcd4fc;
+  border-radius: 0.75rem;
+  color: #1055c9 !important;
+}
+
+.confirm-check .form-check-input {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #1055c9;
+}
+
+.confirm-check .form-check-input:checked {
+  background-color: var(--blue, #0d6efd);
+  border-color: var(--blue, #0d6efd);
+}
+
+.confirm-check .form-check-input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(var(--blue-rgb, 13, 110, 253), 0.15);
+  border-color: var(--blue, #0d6efd);
+}
+
+/* ------- Inputs ------- */
+.form-select {
+  border-color: #e9ecef;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.input-group-text {
+  color: var(--blue1);
+  border-color: #e9ecef;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.form-select:focus {
+  box-shadow: none;
+}
+
+.field {
+  border-radius: 0.5rem;
+  transition: box-shadow 0.2s ease;
+}
+
+.field:focus-within {
+  box-shadow: 0 0 0 0.2rem rgba(var(--blue-rgb, 13, 110, 253), 0.15);
+}
+
+.field:focus-within .form-select,
+.field:focus-within .input-group-text {
+  border-color: var(--blue);
+  background-color: #fff !important;
+}
+
+.field:focus-within .input-group-text {
+  color: var(--blue);
+}
+
+/* Error state */
+.field.is-invalid-group .form-select,
+.field.is-invalid-group .input-group-text {
+  border-color: #dc3545;
+}
+
+.field.is-invalid-group .input-group-text {
   color: #dc3545;
 }
 
-.confirm-box {
-  background: #fff5f5;
-  border: 1px solid #f5c2c7;
+.field.is-invalid-group:focus-within {
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
+}
+
+.field-error {
+  color: #dc3545;
+  font-size: 0.8rem;
+  margin-top: 0.35rem;
 }
 </style>

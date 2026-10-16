@@ -2,9 +2,10 @@
 import { computed, ref } from "vue";
 import { useAccount } from "../stores/account";
 import BottomNav from "../components/BottomNav.vue";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const { user } = useAccount();
-
 const flipped = ref(false);
 const showBalance = ref(false);
 
@@ -42,9 +43,14 @@ const toggleBalance = () => (showBalance.value = !showBalance.value);
 
         <img src="/imgs/zanbus_logo.png" alt="ZanBus" class="logo" />
 
-        <button class="profile-btn" type="button" aria-label="Notifications">
+        <RouterLink
+          to="/notification"
+          class="profile-btn"
+          type="button"
+          aria-label="Notifications"
+        >
           <i class="bi bi-bell"></i>
-        </button>
+        </RouterLink>
       </header>
 
       <!-- Flip card -->
@@ -118,13 +124,13 @@ const toggleBalance = () => (showBalance.value = !showBalance.value);
         </div>
 
         <p class="text-center small text-secondary mt-2 mb-0">
-          <i class="bi bi-arrow-repeat me-1"></i>Tap the card to flip
+          <i class="bi bi-arrow-repeat me-1"></i>{{ t("user.home.flip") }}
         </p>
       </section>
 
       <!-- Quick Actions -->
       <section class="mb-3">
-        <h5 class="fw-bold mb-2">Quick actions</h5>
+        <h5 class="fw-bold mb-2">{{ t("user.home.title") }}</h5>
 
         <div class="actions-grid">
           <!-- Top up -->
@@ -133,9 +139,9 @@ const toggleBalance = () => (showBalance.value = !showBalance.value);
               <i class="bi bi-wallet2"></i>
             </div>
             <div>
-              <h6 class="fw-bold mb-1">Top Up</h6>
+              <h6 class="fw-bold mb-1">{{ t("user.home.label_1") }}</h6>
               <p class="action-text text-secondary mb-0">
-                Add balance to your card
+                {{ t("user.home.holder_1") }}
               </p>
             </div>
             <i class="bi bi-arrow-right action-arrow"></i>
@@ -147,23 +153,23 @@ const toggleBalance = () => (showBalance.value = !showBalance.value);
               <i class="bi bi-qr-code-scan"></i>
             </div>
             <div>
-              <h6 class="fw-bold mb-1">Use Card</h6>
+              <h6 class="fw-bold mb-1">{{ t("user.home.label_2") }}</h6>
               <p class="action-text text-secondary mb-0">
-                Scan code to take the ride
+                {{ t("user.home.holder_2") }}
               </p>
             </div>
             <i class="bi bi-arrow-right action-arrow"></i>
           </RouterLink>
 
           <!-- Report loss -->
-          <RouterLink to="/card" class="action-card text-decoration-none">
+          <RouterLink to="/report-card" class="action-card text-decoration-none">
             <div class="action-icon orange">
               <i class="bi bi-exclamation-triangle"></i>
             </div>
             <div>
-              <h6 class="fw-bold mb-1">Report Loss</h6>
+              <h6 class="fw-bold mb-1">{{ t("user.home.label_3") }}</h6>
               <p class="action-text text-secondary mb-0">
-                Report a lost or stolen card
+                {{ t("user.home.holder_3") }}
               </p>
             </div>
             <i class="bi bi-arrow-right action-arrow"></i>
@@ -177,9 +183,9 @@ const toggleBalance = () => (showBalance.value = !showBalance.value);
       >
         <img src="/imgs/bus_homepage.png" alt="Bus" class="bus" />
         <div class="min-w-0">
-          <h6 class="fw-bold text-dark mb-1">Travel Smart, Travel Easy</h6>
+          <h6 class="fw-bold text-dark mb-1">{{ t("user.home.title2") }}</h6>
           <p class="small text-muted mb-0">
-            Use ZanBus for a faster, safer and more convenient journey.
+            {{ t("user.home.subtitle") }}
           </p>
         </div>
       </section>

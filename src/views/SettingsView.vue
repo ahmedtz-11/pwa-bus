@@ -1,36 +1,34 @@
 <script setup>
 import { computed, reactive, ref, watch } from "vue";
 import { RouterLink, useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 import { useAccount } from "../stores/account";
 import { useToast } from "../composables/useToast";
 import BottomNav from "../components/BottomNav.vue";
 import SheetModal from "../components/SheetModal.vue";
 
+const { t, locale } = useI18n();
 const router = useRouter();
 const { signOut } = useAccount();
 const { show } = useToast();
 
-// TODO: replace with your real support details / app version
 const SUPPORT_PHONE = "+255 700 000 000";
 const SUPPORT_EMAIL = "support@zanbus.co.tz";
 const APP_VERSION = "1.0.0";
 
+const THEMES = ["dark", "light"];
+
+// Language names are shown in their own language on purpose
 const LANGUAGES = [
   { value: "en", label: "English" },
   { value: "sw", label: "Kiswahili" },
 ];
 
-const THEMES = [
-  { value: "dark", label: "Dark" },
-  { value: "light", label: "Light" },
-];
-
-// ---------- Saved settings (localStorage) ----------
+// ------ Saved settings ------
 const STORAGE_KEY = "busgo_settings";
 const defaults = {
   notifications: true,
   biometric: false,
-  language: "en",
   theme: "light",
 };
 
@@ -43,7 +41,6 @@ function load() {
 }
 
 const settings = reactive(load());
-
 watch(
   settings,
   () => {
@@ -54,44 +51,45 @@ watch(
   { deep: true },
 );
 
+// The active i18n locale is the single source of truth for the language
 const languageLabel = computed(
-  () => LANGUAGES.find((l) => l.value === settings.language)?.label,
+  () => LANGUAGES.find((l) => l.value === locale.value)?.label,
 );
 
-const themeLabel = computed(
-  () => THEMES.find((t) => t.value === settings.theme)?.label,
-);
+const themeLabel = computed(() => t(`user.settings.preferences.${settings.theme}`));
 
-// ---------- Modals ----------
+// ------ Modals ------
 const modal = ref(null); // "language" | "theme" | "contact" | "about" | "logout"
 const loggingOut = ref(false);
 
 const open = (name) => (modal.value = name);
 const close = () => (modal.value = null);
 
-// ---------- Setting categories ----------
+// ------ Setting categories ------
 // type: "link" (opens a page) | "toggle" (on/off) | "modal" (opens a sheet)
 const sections = computed(() => [
   {
-    title: "Transactions",
+    key: "transactions",
+    title: t("user.settings.transactions.title"),
     items: [
       {
         key: "history",
         icon: "bi-clock-history",
-        title: "Transaction history",
-        subtitle: "View all your card trasactions",
+        title: t("user.settings.transactions.label_1"),
+        subtitle: t("user.settings.transactions.holder_1"),
         type: "link",
         to: "/transactions",
       },
     ],
   },
   {
-    title: "Preferences",
+    key: "preferences",
+    title: t("user.settings.preferences.title"),
     items: [
       {
         key: "language",
         icon: "bi-translate",
-        title: "Language",
+        title: t("user.settings.preferences.label_1"),
         subtitle: languageLabel.value,
         type: "modal",
         modal: "language",
@@ -99,21 +97,21 @@ const sections = computed(() => [
       {
         key: "notifications",
         icon: "bi-bell",
-        title: "Notifications",
-        subtitle: "Manage your notification preferences",
+        title: t("user.settings.preferences.label_2"),
+        subtitle: t("user.settings.preferences.holder_2"),
         type: "toggle",
       },
       {
         key: "biometric",
         icon: "bi-fingerprint",
-        title: "Biometric login",
-        subtitle: "Use Face ID or fingerprint for faster login",
+        title: t("user.settings.preferences.label_3"),
+        subtitle: t("user.settings.preferences.holder_3"),
         type: "toggle",
       },
       {
         key: "theme",
         icon: "bi-palette",
-        title: "App Theme",
+        title: t("user.settings.preferences.label_4"),
         subtitle: themeLabel.value,
         type: "modal",
         modal: "theme",
@@ -121,50 +119,52 @@ const sections = computed(() => [
     ],
   },
   {
-    title: "Help & Support",
+    key: "help",
+    title: t("user.settings.support.title"),
     items: [
       {
         key: "faq",
         icon: "bi-question-circle",
-        title: "FAQs",
-        subtitle: "Answers to common questions",
+        title: t("user.settings.support.label_1"),
+        subtitle: t("user.settings.support.holder_1"),
         type: "link",
         to: "/faq",
       },
       {
         key: "contact",
         icon: "bi-headset",
-        title: "Help Center",
-        subtitle: "Call or email our team",
+        title: t("user.settings.support.label_2"),
+        subtitle: t("user.settings.support.holder_2"),
         type: "modal",
         modal: "contact",
       },
       {
-        key: "report",
+        key: "guide",
         icon: "bi-book-half",
-        title: "User Guide",
-        subtitle: "A complete guide to using ZanBus",
+        title: t("user.settings.support.label_3"),
+        subtitle: t("user.settings.support.holder_3"),
         type: "link",
         to: "/guide",
       },
     ],
   },
   {
-    title: "Account",
+    key: "account",
+    title: t("user.settings.account.title"),
     items: [
       {
         key: "account",
         icon: "bi-person-circle",
-        title: "Account Information",
-        subtitle: "View your account details",
+        title: t("user.settings.account.label_1"),
+        subtitle: t("user.settings.account.holder_1"),
         type: "link",
         to: "/account",
       },
       {
         key: "logout",
         icon: "bi-box-arrow-right",
-        title: "Log out",
-        subtitle: "Sign out of this device",
+        title: t("user.settings.account.label_2"),
+        subtitle: t("user.settings.account.holder_2"),
         type: "modal",
         modal: "logout",
         danger: true,
@@ -172,13 +172,16 @@ const sections = computed(() => [
     ],
   },
   {
-    title: "About",
+    key: "about",
+    title: t("user.settings.about.title"),
     items: [
       {
         key: "about",
         icon: "bi-info-circle",
-        title: "About ZanBus",
-        subtitle: `Version ${APP_VERSION}`,
+        title: t("user.settings.items.about.title"),
+        subtitle: t("user.settings.items.about.subtitle", {
+          version: APP_VERSION,
+        }),
         type: "modal",
         modal: "about",
       },
@@ -203,12 +206,30 @@ const attrsFor = (item) => {
 
 function onToggle(item, checked) {
   settings[item.key] = checked;
-  show(`${item.title} ${checked ? "on" : "off"}`);
+  show(
+    t(checked ? "user.settings.toast.on" : "user.settings.toast.off", {
+      name: item.title,
+    }),
+  );
 }
 
+// Switch the whole app language and remember it
 function pickLanguage(value) {
-  settings.language = value;
+  if (!LANGUAGES.some((l) => l.value === value)) return;
+
+  locale.value = value; // every t() in the app updates instantly
+  try {
+    localStorage.setItem("language", value); // read by main.js on next start
+    sessionStorage.removeItem("language"); // so an old value can't override it
+  } catch {}
+  document.documentElement.lang = value;
+
   close();
+  show(
+    t("user.settings.toast.languageChanged", {
+      language: LANGUAGES.find((l) => l.value === value)?.label,
+    }),
+  );
 }
 
 function pickTheme(value) {
@@ -223,10 +244,10 @@ async function logout() {
   try {
     await signOut();
     close();
-    show("You have been logged out");
+    show(t("user.settings.toast.loggedOut"));
     router.replace("/");
   } catch (e) {
-    show(e.message || "Could not log out. Try again.");
+    show(e.message || t("user.settings.toast.logoutFailed"));
   } finally {
     loggingOut.value = false;
   }
@@ -240,18 +261,24 @@ async function logout() {
       <header class="d-flex align-items-center justify-content-between mb-2">
         <img src="/imgs/zanbus_logo.png" alt="ZanBus" class="logo" />
 
-        <button class="profile-btn" type="button" aria-label="Notifications">
+        <RouterLink
+          to="/notification"
+          class="profile-btn"
+          aria-label="Notifications"
+        >
           <i class="bi bi-bell"></i>
-        </button>
+        </RouterLink>
       </header>
 
       <div class="mb-3">
-        <h5 class="fw-bold mb-1">Settings</h5>
-        <p class="page-sub fw-bold mb-0">Manage your preferences and account</p>
+        <h5 class="fw-bold mb-1">{{ t("user.settings.title") }}</h5>
+        <p class="page-sub fw-bold mb-0">
+          {{ t("user.settings.subtitle") }}
+        </p>
       </div>
 
       <!-- Categories -->
-      <section v-for="section in sections" :key="section.title" class="mb-4">
+      <section v-for="section in sections" :key="section.key" class="mb-4">
         <h6 class="section-title">{{ section.title }}</h6>
 
         <div class="section-card">
@@ -295,8 +322,8 @@ async function logout() {
     <!-- Language -->
     <SheetModal
       :model-value="modal === 'language'"
-      title="Language"
-      subtitle="Choose the app language"
+      :title="t('user.settings.preferences.label_1')"
+      :subtitle="t('user.settings.preferences.holder_1')"
       @update:model-value="close"
     >
       <div class="choice-list">
@@ -305,36 +332,33 @@ async function logout() {
           :key="l.value"
           type="button"
           class="choice"
-          :class="{ active: settings.language === l.value }"
+          :class="{ active: locale === l.value }"
           @click="pickLanguage(l.value)"
         >
           {{ l.label }}
-          <i
-            v-if="settings.language === l.value"
-            class="bi bi-check-circle-fill"
-          ></i>
+          <i v-if="locale === l.value" class="bi bi-check-circle-fill"></i>
         </button>
       </div>
     </SheetModal>
 
-    <!-- Theme settings -->
+    <!-- Theme -->
     <SheetModal
       :model-value="modal === 'theme'"
-      title="App Theme"
-      subtitle="Used as your default amount when topping up"
+      :title="t('user.settings.preferences.label_4')"
+      :subtitle="t('user.settings.preferences.holder_4')"
       @update:model-value="close"
     >
       <div class="choice-list">
         <button
-          v-for="t in THEMES"
-          :key="t"
+          v-for="th in THEMES"
+          :key="th"
           type="button"
           class="choice"
-          :class="{ active: settings.theme === t }"
-          @click="pickTheme(t)"
+          :class="{ active: settings.theme === th }"
+          @click="pickTheme(th)"
         >
-          {{ t.label }}
-          <i v-if="settings.theme === t" class="bi bi-check-circle-fill"></i>
+          {{ t(`user.settings.preferences.${th}`) }}
+          <i v-if="settings.theme === th" class="bi bi-check-circle-fill"></i>
         </button>
       </div>
     </SheetModal>
@@ -342,8 +366,8 @@ async function logout() {
     <!-- Contact support -->
     <SheetModal
       :model-value="modal === 'contact'"
-      title="Contact support"
-      subtitle="We are happy to help"
+      :title="t('user.settings.support.label_2')"
+      :subtitle="t('user.settings.support.holder_2')"
       @update:model-value="close"
     >
       <div class="choice-list">
@@ -365,33 +389,31 @@ async function logout() {
           <img
             src="/imgs/zanbus_blue.png"
             alt="ZanBus"
-            class="text-center about-logo mb-2"
+            class="about-logo mb-2"
           />
-          <p class="fw-semibold mb-1">ZanBus - Mwendo Fasta</p>
+          <p class="fw-semibold mb-1">
+            ZanBus - Mwendo Fasta
+          </p>
         </div>
         <p class="text-secondary small mb-0">
-          ZanBus is Zanzibar's modern public bus service, making everyday travel
-          simple, reliable and convenient.
+          {{ t("user.settings.about.desc_1") }}
         </p>
         <br />
         <p class="text-secondary small mb-0">
-          The ZanBus app gives passengers an easier way to travel - manage
-          physical or virtual travel cards, check balances, top up, pay for
-          journeys using QR, view transactions and manage their travel account.
+          {{ t("user.settings.about.desc_2") }}
         </p>
         <br />
         <p class="text-secondary fw-semibold small mb-3 text-center">
-          <em>One card. One app. Easier journeys across Zanzibar.</em>
+          <em>{{ t("user.settings.about.desc_3") }}</em>
         </p>
-        <!-- <p class="text-secondary small mt-3 mb-0">Powered by Rahisi</p> -->
       </div>
     </SheetModal>
 
     <!-- Log out confirmation -->
     <SheetModal
       :model-value="modal === 'logout'"
-      title="Log out?"
-      subtitle="You will need an OTP to sign in again."
+      :title="t('user.settings.account.label_1')"
+      :subtitle="t('user.settings.account.holder_1')"
       @update:model-value="close"
     >
       <div class="d-flex gap-2">
@@ -401,7 +423,7 @@ async function logout() {
           :disabled="loggingOut"
           @click="close"
         >
-          Cancel
+          {{ t("user.settings.account.btn_2") }}
         </button>
         <button
           type="button"
@@ -414,7 +436,7 @@ async function logout() {
             class="spinner-border spinner-border-sm me-2"
             aria-hidden="true"
           ></span>
-          Log out
+          {{ t("user.settings.account.btn_1") }}
         </button>
       </div>
     </SheetModal>
@@ -551,7 +573,7 @@ async function logout() {
 
 .row-chevron {
   flex: 0 0 auto;
-  color: #bbb;
+  color: #666;
 }
 
 .row-item.danger .row-icon {

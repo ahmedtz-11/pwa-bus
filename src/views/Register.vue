@@ -4,7 +4,9 @@ import { useRouter } from "vue-router";
 import { useForm } from "vee-validate";
 import { useAccount } from "../stores/account";
 import { useToast } from "../composables/useToast";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const router = useRouter();
 const { signUp } = useAccount();
 const { show } = useToast();
@@ -89,14 +91,14 @@ const submit = handleSubmit((values) => {
 
       <div class="form-container position-relative mx-auto">
         <div class="mb-3 text-center">
-          <h3 class="fw-bold mb-1 text-blue2">Create an account</h3>
-          <p class="text-secondary mb-0">Get a card to start your journey</p>
+          <h3 class="fw-bold mb-1 text-blue2">{{ t("home.register.title") }}</h3>
+          <p class="text-secondary mb-0">{{ t("home.register.subtitle") }}</p>
         </div>
 
         <form @submit.prevent="submit" novalidate>
           <!-- Name -->
           <div class="mb-3">
-            <label class="form-label fw-semibold" for="name">Full name</label>
+            <label class="form-label fw-semibold" for="name">{{ t("home.register.label_1") }}</label>
             <div
               class="input-group input-group-lg field"
               :class="{ 'is-invalid-group': errors.name }"
@@ -122,7 +124,7 @@ const submit = handleSubmit((values) => {
           <!-- Phone -->
           <div class="mb-3">
             <label class="form-label fw-semibold" for="phone">
-              Phone number
+              {{ t("home.register.label_2") }}
             </label>
             <div
               class="input-group input-group-lg field"
@@ -159,19 +161,19 @@ const submit = handleSubmit((values) => {
             :disabled="isSubmitting"
             class="btn btn-blue btn-lg w-100 rounded-3 py-2 fw-semibold mt-2"
           >
-            Register
+            {{ t("home.welcome.register") }}
             <i class="bi bi-arrow-right ms-2"></i>
           </button>
         </form>
 
         <!-- Login -->
         <div class="text-center mt-4">
-          <span class="text-secondary small">Already have an account?</span>
+          <span class="text-secondary small">{{ t("home.register.label_3") }}</span>
           <RouterLink
             to="/auth/login"
             class="text-green fw-semibold text-decoration-none small ms-1"
           >
-            Sign in
+            {{ t("home.register.label_4") }}
           </RouterLink>
         </div>
       </div>

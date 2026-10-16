@@ -48,6 +48,8 @@ const items = computed(() => [
     tone: status.value === "active" ? "ok" : "bad",
   },
 ]);
+
+const goBack = () => router.go(-1);
 </script>
 
 <template>
@@ -62,22 +64,28 @@ const items = computed(() => [
         <div
           class="top-bar position-relative d-flex align-items-center justify-content-center"
         >
-          <RouterLink
+          <!-- <RouterLink
             to="/home"
             class="back-link position-absolute start-0 text-white text-decoration-none fw-bold"
             aria-label="Back"
           >
             <i class="bi bi-arrow-left"></i>
-          </RouterLink>
+          </RouterLink> -->
+          <button
+            type="button"
+            class="back-link position-absolute start-0 text-white text-decoration-none fw-bold border-0 bg-transparent"
+            aria-label="Back"
+            @click="goBack"
+          >
+            <i class="bi bi-arrow-left"></i>
+          </button>
 
           <img src="/imgs/zanbus_white.png" alt="Bus" class="logo" />
         </div>
 
         <div class="text-center mt-3">
           <h5 class="fw-semibold mb-1 text-white">FAQs</h5>
-          <p class="small fw-semibold">
-            Fast Answered Questions
-          </p>
+          <p class="small fw-semibold">Fast Answered Questions</p>
         </div>
       </div>
     </section>

@@ -138,6 +138,29 @@ export function useAccount() {
     write(SESSION, true);
   }
 
+  // Marks the account as deactivated and signs the user out.
+  async function deactivateAccount() {
+    if (!state.acct) throw new Error("No account found.");
+    state.acct.status = "deactivated";
+    log("Account deactivated");
+    signOut();
+  }
+
+  // Reports the physical card as lost and blocks it.
+  async function reportCardLost(cardNo) {
+    const no = String(cardNo || "").replace(/\s+/g, "");
+ 
+    if (!state.acct || state.acct.cardNo !== no)
+      throw new Error("Card not found on this account.");
+    if (!state.acct.physical)
+      throw new Error("Only physical cards can be reported as lost.");
+    if (state.acct.status === "blocked")
+      throw new Error("This card is already blocked.");
+ 
+    state.acct.status = "blocked";
+    log(`Card •••• ${no.slice(-4)} reported lost`); // also saves to localStorage
+  }
+
   function signOut() {
     state.session = false;
     write(SESSION, false);
@@ -150,5 +173,7 @@ export function useAccount() {
     requestOtp,
     signIn,
     signOut,
+    deactivateAccount,
+    reportCardLost,
   };
 }

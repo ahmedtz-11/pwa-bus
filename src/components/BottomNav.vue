@@ -1,21 +1,23 @@
-```vue
 <script setup>
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 const tabs = [
   {
     to: "/home",
-    label: "Home",
+    label: t("user.menu.home"),
     icon: "bi-house",
     activeIcon: "bi-house-fill",
   },
   {
     to: "/transactions",
-    label: "Transactions",
+    label: t("user.menu.transactions"),
     icon: "bi-list-ul",
     activeIcon: "bi-list-ul",
   },
   {
     to: "/settings",
-    label: "Settings",
+    label: t("user.menu.settings"),
     icon: "bi-gear",
     activeIcon: "bi-gear-fill",
   },

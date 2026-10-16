@@ -1,0 +1,182 @@
+{
+  "home": {
+    "welcome": {
+      "label_1": "Safari Zinaunganisha Watu",
+      "label_2": "Zanzibar Safi Zaidi",
+      "label_3": "Zanzibar",
+      "label_4": "Weka salio, safiri na usimamie kadi yako ya basi moja kwa moja kupitia simu yako.",
+      "btn_1": "Nina kadi ya basi",
+      "btn_2": "Sina kadi ya basi",
+      "register": "Jisajili",
+      "login": "Ingia",
+      "powered_by": "Imewezeshwa na"
+    },
+    "login": {
+      "title": "Karibu tena",
+      "subtitle": "Ingia ili uendelee na safari yako",
+      "label_1": "Namba ya simu",
+      "label_2": "Huna akaunti?",
+      "btn": "Tuma msimbo",
+      "otp_modal": {
+        "title": "Weka msimbo wa uthibitisho",
+        "subtitle": "Weka msimbo wa tarakimu 4 uliotumwa kwenye simu yako",
+        "label_1": "Hujapokea msimbo?",
+        "label_2": "Tuma tena msimbo",
+        "btn": "Thibitisha msimbo"
+      }
+    },
+    "register": {
+      "title": "Fungua akaunti",
+      "subtitle": "Pata kadi ili uanze safari yako",
+      "label_1": "Jina kamili",
+      "holder_1": "Andika jina lako kamili",
+      "label_2": "Namba ya simu",
+      "holder_2": "Andika namba ya simu",
+      "label_3": "Tayari una akaunti?",
+      "label_4": "Ingia"
+    }
+  },
+  "user": {
+    "menu": {
+      "home": "Nyumbani",
+      "transactions": "Miamala",
+      "settings": "Mipangilio"
+    },
+    "home": {
+      "flip": "Gusa kadi ili uigeuze",
+      "title": "Huduma za Haraka",
+      "label_1": "Ongeza Salio",
+      "holder_1": "Ongeza salio kwenye kadi yako",
+      "label_2": "Tumia Kadi",
+      "holder_2": "Changanua msimbo ili kupanda basi",
+      "label_3": "Ripoti Kadi Iliyopotea",
+      "holder_3": "Ripoti kadi iliyopotea au kuibiwa",
+      "title2": "Safiri kwa Urahisi na Ustadi",
+      "subtitle": "Tumia ZanBus kufurahia safari ya haraka, salama na yenye urahisi zaidi"
+    },
+    "account_info": {
+      "title": "Taarifa za Akaunti",
+      "subtitle": "Tazama na simamia taarifa za akaunti yako",
+      "label_1": "Jina la mwenye akaunti",
+      "label_2": "Namba ya simu",
+      "label_3": "Kadi zilizosajiliwa",
+      "label_4": "Hali ya akaunti",
+      "btn_1": "Toka",
+      "btn_2": "Funga Akaunti"
+    },
+    "topup": {
+      "title": "Ongeza Salio",
+      "subtitle": "Fanya safari zako ziwe rahisi zaidi",
+      "tab_1": "Kadi Zangu",
+      "tab_2": "Kadi Nyingine",
+      "label_1": "Chagua Kadi",
+      "label_2": "Kiasi",
+      "label_3": "Namba ya Kadi",
+      "btn_1": "Endelea Kulipa",
+      "title_2": "Salama na Imelindwa",
+      "subtitle_2": "Malipo yako yanalindwa kwa teknolojia salama ya usimbaji wa taarifa."
+    },
+    "use_card": {
+      "title": "Tumia Kadi Yako",
+      "subtitle": "Onyesha msimbo wako wa QR au gusa kadi yako ili kupanda basi.",
+      "tab_1": {
+        "label": "Msimbo wa QR",
+        "title": "Safiri kwa Kutumia QR",
+        "subtitle": "Muonyeshe kondakta wa basi msimbo huu wa QR ili auchanganue na uweze kusafiri.",
+        "label_1": "Msimbo wa QR uko tayari kuchanganuliwa",
+        "label_2": "Salio la Kadi"
+      },
+      "tab_2": "NFC (Hivi Karibuni)",
+      "title_2": "Salama na Imelindwa",
+      "subtitle_2": "Safari zako ni salama na taarifa za kadi yako zinalindwa."
+    },
+    "report": {
+      "title": "Ripoti Kadi Iliyopotea",
+      "subtitle": "Ripoti kadi yako ya plastiki kuwa imepotea. Kadi itazuiwa mara moja.",
+      "label_1": "Chagua Kadi",
+      "holder_1": "Chagua kadi halisi unayotaka kuripoti kuwa imepotea",
+      "label_2": "Muhimu",
+      "holder_2": "Kadi iliyopotea itabadilishwa katika Ofisi Kuu ya GRT, Kijangwani",
+      "label_3": "Thibitisha na Tuma",
+      "holder_3": "Tafadhali thibitisha kuwa unataka kuripoti kadi hii kuwa imepotea",
+      "warning_title": "Hatua hii haiwezi kutenduliwa.",
+      "warning_subtitle": "Baada ya kuripotiwa, kadi itazuiwa kabisa na haitaweza kutumika tena.",
+      "confirm": "Ninathibitisha kuwa nataka kuripoti kadi hii kuwa imepotea na ninaelewa kuwa itazuiwa kabisa.",
+      "btn_1": "Ripoti Kadi Iliyopotea",
+      "btn_2": "Ghairi"
+    },
+    "transactions": {
+      "title": "Miamala",
+      "subtitle": "Tazama matumizi na historia ya kadi yako",
+      "label_1": "Kadi Inayotumika",
+      "label_2": "Miamala ya Hivi Karibuni",
+      "label_3": "Chuja Miamala",
+      "btn_1": "Weka Upya",
+      "btn_2": "Tumia Vichujio"
+    },
+    "notification": {
+      "title": "Arifa",
+      "subtitle": "Pata taarifa kuhusu matumizi ya kadi yako"
+    },
+    "guide": {
+      "title": "Mwongozo wa Mtumiaji",
+      "subtitle": "Mwongozo kamili wa kutumia ZanBus",
+      "label_1": "Mwongozo",
+      "label_2": "Kuanzia kufungua akaunti hadi safari za kila siku",
+      "desc_1": "Jisajili kwa kutumia jina lako kamili na namba ya simu. Kadi yako ya ZanBus itatengenezwa mara moja.",
+      "desc_2": "Ili kuingia, weka namba yako ya simu, kisha weka msimbo wa tarakimu 6 tutakaokutumia. Huhitaji kukumbuka nenosiri.",
+      "desc_3": "Kwenye ukurasa wa mwanzo, gusa kadi yako ili uigeuze. Tumia alama ya jicho kuonyesha au kuficha salio lako.",
+      "desc_4": "Gusa Ongeza Salio, chagua kadi yako au kadi nyingine, weka kiasi unachotaka kuongeza, kisha endelea kulipa.",
+      "desc_5": "Unapopanda basi, fungua sehemu ya Tumia Kadi na uonyeshe msimbo ili uchanganuliwe na uweze kusafiri.",
+      "desc_6": "Fungua Historia ya Miamala kwenye Mipangilio ili kuona miamala yako ya kuongeza salio na safari wakati wowote.",
+      "desc_7": "Kadi yako ikipotea au kuibiwa, gusa Ripoti Kadi Iliyopotea kwenye ukurasa wa mwanzo mara moja.",
+      "desc_8": "Unahitaji msaada? Tembelea sehemu ya Msaada na Usaidizi kwenye Mipangilio ili kusoma mwongozo wa msaada, kuwasiliana na timu yetu au kuripoti tatizo."
+    },
+    "settings": {
+      "title": "Mipangilio",
+      "subtitle": "Dhibiti mapendeleo na akaunti yako",
+      "transactions": {
+        "title": "Miamala",
+        "label_1": "Historia ya miamala",
+        "holder_1": "Angalia miamala yote ya kadi yako"
+      },
+      "preferences": {
+        "title": "Mapendeleo",
+        "label_1": "Lugha",
+        "holder_1": "Chagua lugha ya programu",
+        "label_2": "Arifa",
+        "holder_2": "Dhibiti mipangilio ya arifa zako",
+        "label_3": "Tumia Bayometriki",
+        "holder_3": "Tumia utambuzi wa uso au alama Za Vidole kuingia haraka",
+        "label_4": "Mwonekano wa programu",
+        "holder_4": "Chagua mwonekano wa programu",
+        "dark": "Giza",
+        "light": "Mwangaza"
+      },
+      "support": {
+        "title": "Msaada na Usaidizi",
+        "label_1": "Maswali ya Mara kwa Mara",
+        "holder_1": "Majibu ya maswali yanayoulizwa mara kwa mara",
+        "label_2": "Kituo cha Msaada",
+        "holder_2": "Piga simu au tutumie barua pepe",
+        "label_3": "Mwongozo wa Mtumiaji",
+        "holder_3": "Mwongozo kamili wa kutumia programu ya ZanBus"
+      },
+      "account": {
+        "title": "Akaunti",
+        "label_1": "Taarifa za Akaunti",
+        "holder_1": "Angalia taarifa za akaunti yako",
+        "label_2": "Toka kwenye Akaunti",
+        "holder_2": "Ondoka kwenye akaunti yako kwenye kifaa hiki",
+        "btn_1": "Toka",
+        "btn_2": "Ghairi"
+      },
+      "about": {
+        "title": "Kuhusu ZanBus",
+        "desc_1": "ZanBus ni huduma ya kisasa ya usafiri wa mabasi ya umma Zanzibar inayofanya safari za kila siku kuwa rahisi, za kuaminika na zenye urahisi wa matumizi.",
+        "desc_2": "Programu ya ZanBus huwasaidia abiria kusafiri kwa urahisi zaidi kwa kuwawezesha kusimamia kadi za usafiri za kawaida au za kidijitali, kuangalia salio, kuongeza salio, kulipia safari kwa kutumia msimbo wa QR, kuona historia ya miamala na kusimamia akaunti zao za usafiri.",
+        "desc_3": "Kadi moja. Programu moja. Safari rahisi zaidi kote Zanzibar."
+      }
+    }
+  }
+}

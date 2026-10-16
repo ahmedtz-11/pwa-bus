@@ -1,9 +1,14 @@
 <script setup>
 import { computed, ref } from "vue";
+import { useRouter } from "vue-router";
 import { useForm } from "vee-validate";
 import { useAccount } from "../stores/account";
 import { useToast } from "../composables/useToast";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
+const router = useRouter();
+const goBack = () => router.go(-1);
 const { user } = useAccount();
 const { show } = useToast();
 
@@ -14,14 +19,13 @@ const QUICK_AMOUNTS = [1000, 5000, 10000];
 const tab = ref("mine"); // "mine" | "other"
 const paying = ref(false);
 
-// Cards that belong to the logged-in user (one for now, ready for more)
+// Cards that belong to the logged-in user
 const cards = computed(() =>
   user.value?.cardNo
     ? [
         {
           value: user.value.cardNo,
-          label: `•••• ${user.value.cardNo.slice(-6)
-          }`,
+          label: `•••• ${user.value.cardNo.slice(-6)}`,
         },
       ]
     : [],
@@ -29,7 +33,7 @@ const cards = computed(() =>
 
 const defaultCard = computed(() => cards.value[0]?.value || "");
 
-// Validation rules (return true when valid, or an error message)
+// Validation
 const validationSchema = {
   card(value) {
     const v = (value || "").replace(/\s+/g, "");
@@ -68,10 +72,6 @@ const fmt = (n) => Number(n).toLocaleString("en-US");
 // 4829175036481920 -> 4829 1750 3648 1920 (typing mode only)
 const formattedCard = computed(() =>
   (card.value || "").replace(/(\d{4})(?=\d)/g, "$1 "),
-);
-
-const amountHint = computed(() =>
-  /^\d+$/.test(amount.value || "") ? `TZS ${fmt(amount.value)}` : "",
 );
 
 function setTab(next) {
@@ -136,27 +136,28 @@ const submit = handleSubmit(async (vals) => {
         <div
           class="top-bar position-relative d-flex align-items-center justify-content-center"
         >
-          <RouterLink
-            to="/home"
-            class="back-link position-absolute start-0 text-white text-decoration-none fw-bold"
+          <button
+            type="button"
+            class="back-link position-absolute start-0 text-white text-decoration-none fw-bold border-0 bg-transparent"
             aria-label="Back"
+            @click="goBack"
           >
             <i class="bi bi-arrow-left"></i>
-          </RouterLink>
+          </button>
 
           <img src="/imgs/zanbus_white.png" alt="Bus" class="logo" />
         </div>
 
         <div class="text-center mt-3">
-          <h5 class="fw-semibold mb-1 text-white">Top Up</h5>
-          <p class="hero-sub fw-semibold">Simplify your journeys</p>
+          <h5 class="fw-semibold mb-1 text-white">{{ t("user.topup.title") }}</h5>
+          <p class="hero-sub fw-semibold">{{ t("user.topup.subtitle") }}</p>
         </div>
       </div>
     </section>
 
     <!-- Form section -->
     <section class="form-section bg-white flex-grow-1 px-4 py-4">
-      <!-- Decorative overlay image anchored to the bottom -->
+      <!-- Overlay image to the bottom -->
       <div class="form-overlay" aria-hidden="true"></div>
 
       <div class="form-container position-relative mx-auto">
@@ -170,7 +171,7 @@ const submit = handleSubmit(async (vals) => {
             :aria-selected="tab === 'mine'"
             @click="setTab('mine')"
           >
-            <i class="bi bi-credit-card-2-front me-2"></i>My cards
+            <i class="bi bi-credit-card-2-front me-2"></i>{{ t("user.topup.tab_1") }}
           </button>
 
           <button
@@ -181,7 +182,7 @@ const submit = handleSubmit(async (vals) => {
             :aria-selected="tab === 'other'"
             @click="setTab('other')"
           >
-            <i class="bi bi-send me-2"></i>Other card
+            <i class="bi bi-send me-2"></i>{{ t("user.topup.tab_2") }}
           </button>
         </div>
 
@@ -189,7 +190,7 @@ const submit = handleSubmit(async (vals) => {
           <!-- Card: dropdown (my card) -->
           <div class="mb-3">
             <label class="form-label fw-semibold" for="card">
-              {{ tab === "mine" ? "Select card" : "Card number" }}
+              {{ tab === "mine" ? t("user.topup.label_1") : t("user.topup.label_3") }}
             </label>
 
             <div
@@ -244,8 +245,8 @@ const submit = handleSubmit(async (vals) => {
           </div>
 
           <!-- Amount -->
-          <div class="mb-2">
-            <label class="form-label fw-semibold" for="amount">Amount</label>
+          <div class="mb-3">
+            <label class="form-label fw-semibold" for="amount">{{ t("user.topup.label_2") }}</label>
 
             <div
               class="input-group input-group-lg field"
@@ -270,9 +271,6 @@ const submit = handleSubmit(async (vals) => {
             <div v-if="errors.amount" class="field-error">
               <i class="bi bi-exclamation-circle me-1"></i>{{ errors.amount }}
             </div>
-            <div v-else-if="amountHint" class="amount-hint">
-              {{ amountHint }}
-            </div>
           </div>
 
           <!-- Quick amounts -->
@@ -285,7 +283,7 @@ const submit = handleSubmit(async (vals) => {
               :class="{ active: Number(amount) === n }"
               @click="pickAmount(n)"
             >
-              {{ fmt(n) }}
+              <span class="small">TZS</span> {{ fmt(n) }}
             </button>
           </div>
 
@@ -295,9 +293,9 @@ const submit = handleSubmit(async (vals) => {
               <i class="bi bi-shield-lock-fill"></i>
             </span>
             <div>
-              <div class="secure-title">Safe & Secure</div>
+              <div class="secure-title">{{ t("user.topup.title_2") }}</div>
               <div class="secure-text">
-                Your payment is protected with secure encryption.
+                {{ t("user.topup.subtitle_2") }}
               </div>
             </div>
           </div>
@@ -314,7 +312,7 @@ const submit = handleSubmit(async (vals) => {
               aria-hidden="true"
             ></span>
             <i v-else class="bi bi-arrow-up-right-circle-fill ms-2"></i>
-            Proceed to Payment
+            {{ t("user.topup.btn_1") }}
           </button>
         </form>
       </div>

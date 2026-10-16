@@ -26,6 +26,11 @@ const routes = [
     meta: { auth: true },
   },
   {
+    path: "/topup-yas",
+    component: () => import("./views/TopUp2.vue"),
+    meta: { auth: true },
+  },
+  {
     path: "/card",
     component: () => import("./views/CardView.vue"),
     meta: { auth: true },
@@ -53,6 +58,16 @@ const routes = [
   {
     path: "/guide",
     component: () => import("./views/UserGuide.vue"),
+    meta: { auth: true },
+  },
+  {
+    path: "/notification",
+    component: () => import("./views/Notification.vue"),
+    meta: { auth: true },
+  },
+  {
+    path: "/report-card",
+    component: () => import("./views/ReportCard.vue"),
     meta: { auth: true },
   },
 ];
