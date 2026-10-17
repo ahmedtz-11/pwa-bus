@@ -31,17 +31,17 @@ export default defineConfig({
 
         icons: [
           {
-            src: "/imgs/zanbus192.png",
+            src: "/zanbus192.png",
             sizes: "192x192",
             type: "image/png",
           },
           {
-            src: "/imgs/zanbus512.png",
+            src: "/zanbus512.png",
             sizes: "512x512",
             type: "image/png",
           },
           {
-            src: "/imgs/zanbus512.png",
+            src: "/zanbus512.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",

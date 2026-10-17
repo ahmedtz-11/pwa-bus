@@ -1,5 +1,6 @@
 <script setup>
 import { useI18n } from "vue-i18n";
+import InstallButton from "../components/InstallButton.vue";
 
 const { t } = useI18n();
 </script>
@@ -14,6 +15,7 @@ const { t } = useI18n();
     <section
       class="content position-relative text-white px-4 pb-4 d-flex flex-column flex-grow-1"
     >
+      <InstallButton />
       <!-- Top block: logo + heading (sits higher, centered in the free space) -->
       <div
         class="hero flex-grow-1 d-flex flex-column justify-content-center align-items-center"
@@ -31,13 +33,17 @@ const { t } = useI18n();
           </span> -->
 
           <h1 class="display-4 fw-bold lh-1 mb-3 text-center text-blue2">
-            {{ t("home.welcome.label_1") }} <br /><span class="text-green">{{ t("home.welcome.label_2") }} </span>
+            {{ t("home.welcome.label_1") }} <br /><span class="text-green"
+              >{{ t("home.welcome.label_2") }}
+            </span>
             Zanzibar
           </h1>
 
           <p class="text-lead text-white mb-0 text-center">
             {{ t("home.welcome.label_4") }}
           </p>
+
+          <!-- <InstallButton /> -->
         </div>
       </div>
 
@@ -63,7 +69,9 @@ const { t } = useI18n();
 
         <!-- Bottom indicator -->
         <div class="text-center mt-4">
-          <span class="small text-white-50">{{ t("home.welcome.powered_by") }} Rahisi</span>
+          <span class="small text-white-50"
+            >{{ t("home.welcome.powered_by") }} Rahisi</span
+          >
         </div>
       </div>
     </section>
