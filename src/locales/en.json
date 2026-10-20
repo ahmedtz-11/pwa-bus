@@ -133,6 +133,26 @@
       "desc_7": "If your card is lost or stolen, tap Report Loss on the home page right away.",
       "desc_8": "Need a hand? Visit Help & Support in Settings to read the help center, contact the team or report a problem."
     },
+    "faq": {
+      "title": "FAQs",
+      "subtitle": "Answers about accounts, cards, payments, travel, and lost cards.",
+      "q1": "How do I create a ZanBus account?",
+      "a1": "Tap Register on the welcome page, enter your full name and phone number, and your ZanBus card is created for you right away. If you already have a card, choose “I have a physical card” and sign in.",
+      "q2": "How do I sign in?",
+      "a2": "Enter your phone number and tap Send code. We send you a 4-digit code, and you enter it to sign in. There is no password to remember.",
+      "q3": "How do I top up my card?",
+      "a3": "Open Top Up from the home page, choose your card, enter an amount (or pick a quick amount such as 1,000, 5,000 or 10,000) and tap Proceed to Payment.",
+      "q4": "Can I top up someone else’s card?",
+      "a4": "Yes. On the Top Up page switch to the Another card tab, type the card number, enter the amount and continue to payment.",
+      "q5": "How do I pay for a ride?",
+      "a5": "Open Use Card and show your QR code to the bus conductor to scan. Make sure your card has enough balance before you board. NFC tap-to-pay is coming soon.",
+      "q6": "Where can I see my balance and past payments?",
+      "a6": "Your balance is on the card on the home page. Tap the eye icon to show or hide it. For past top-ups and rides, open Transaction history in Settings.",
+      "q7": "What should I do if I lose my card?",
+      "a7": "Tap Report Loss on the home page, select the card and confirm. The card is blocked straight away and cannot be used again. A replacement is issued at the GRT Main Office in Kijangwani.",
+      "q8": "How can I get help?",
+      "a8": "Open Settings and tap Help Center to call or email our support team. You can also read the User Guide for a step-by-step walkthrough of the app."
+    },
     "settings": {
       "title": "Settings",
       "subtitle": "Manage your preferences and account",
@@ -169,11 +189,14 @@
         "holder_1": "View your account details",
         "label_2": "Logout",
         "holder_2": "Sign out of this device",
-        "btn_1": "Logout",
-        "btn_2": "Cancel"
+        "holder_3": "Are you sure you want to logout?",
+        "yes": "Yes",
+        "no": "No"
       },
       "about": {
-        "title": "About ZanBus",
+        "title_1": "About",
+        "title_2": "About ZanBus",
+        "subtitle": "App version and information",
         "desc_1": "ZanBus is Zanzibar's modern public bus service, amking everyday travel simple, reliable and convenient.",
         "desc_2": "AThe ZanBus app gives passengers an easier way to travel- manage physical or virtual travel cards, check balances, top up, pay for journeys using QR, view transactions and manage their travel account.",
         "desc_3": "One card. One app. Easier journeys across Zanzibar."

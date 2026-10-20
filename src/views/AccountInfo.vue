@@ -118,7 +118,7 @@ const goBack = () => {
 
         <div class="text-center mt-3">
           <h5 class="fw-semibold mb-1 text-white">{{ t("user.account_info.title") }}</h5>
-          <p class="small fw-semibold">{{ t("user.account_info.subtitle") }}</p>
+          <p class="sub">{{ t("user.account_info.subtitle") }}</p>
         </div>
       </div>
     </section>
@@ -224,7 +224,7 @@ const goBack = () => {
 
 .small {
   font-size: 0.7rem !important;
-  color: #aaa !important;
+  color: #888 !important;
 }
 
 .hero {

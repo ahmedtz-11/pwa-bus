@@ -119,9 +119,9 @@
       "subtitle": "Pata taarifa kuhusu matumizi ya kadi yako"
     },
     "guide": {
-      "title": "Mwongozo wa Mtumiaji",
-      "subtitle": "Mwongozo kamili wa kutumia ZanBus",
-      "label_1": "Mwongozo",
+      "title": "Muongozo wa Mtumiaji",
+      "subtitle": "Muongozo kamili wa kutumia ZanBus",
+      "label_1": "Muongozo",
       "label_2": "Kuanzia kufungua akaunti hadi safari za kila siku",
       "desc_1": "Jisajili kwa kutumia jina lako kamili na namba ya simu. Kadi yako ya ZanBus itatengenezwa mara moja.",
       "desc_2": "Ili kuingia, weka namba yako ya simu, kisha weka msimbo wa tarakimu 6 tutakaokutumia. Huhitaji kukumbuka nenosiri.",
@@ -130,7 +130,27 @@
       "desc_5": "Unapopanda basi, fungua sehemu ya Tumia Kadi na uonyeshe msimbo ili uchanganuliwe na uweze kusafiri.",
       "desc_6": "Fungua Historia ya Miamala kwenye Mipangilio ili kuona miamala yako ya kuongeza salio na safari wakati wowote.",
       "desc_7": "Kadi yako ikipotea au kuibiwa, gusa Ripoti Kadi Iliyopotea kwenye ukurasa wa mwanzo mara moja.",
-      "desc_8": "Unahitaji msaada? Tembelea sehemu ya Msaada na Usaidizi kwenye Mipangilio ili kusoma mwongozo wa msaada, kuwasiliana na timu yetu au kuripoti tatizo."
+      "desc_8": "Unahitaji msaada? Tembelea sehemu ya Msaada na Usaidizi kwenye Mipangilio ili kusoma muongozo wa msaada, kuwasiliana na timu yetu au kuripoti tatizo."
+    },
+    "faq": {
+      "title": "Maswali",
+      "subtitle": "Majibu kuhusu akaunti, kadi, malipo, safari na kadi zilizopotea.",
+      "q1": "Ninawezaje kufungua akaunti ya ZanBus?",
+      "a1": "Bonyeza Sajili kwenye ukurasa wa mwanzo, weka jina lako kamili na namba ya simu, kisha utatengenezewa kadi yako ya ZanBus mara moja. Ikiwa tayari una kadi, chagua “Nina kadi ya kawaida” kisha ingia kwenye akaunti yako.",
+      "q2": "Ninawezaje kuingia kwenye akaunti yangu?",
+      "a2": "Weka namba yako ya simu na bonyeza Tuma msimbo. Tutakutumia msimbo wa tarakimu 4, kisha uutumie kuingia kwenye akaunti yako. Huhitaji kukumbuka nenosiri.",
+      "q3": "Ninawezaje kuongeza salio kwenye kadi yangu?",
+      "a3": "Fungua sehemu ya Ongeza Salio kwenye ukurasa wa mwanzo, chagua kadi yako, weka kiasi unachotaka kuongeza au chagua kiasi cha haraka kama 1,000, 5,000 au 10,000, kisha bonyeza Endelea Kulipa.",
+      "q4": "Je, ninaweza kuongeza salio kwenye kadi ya mtu mwingine?",
+      "a4": "Ndiyo. Kwenye ukurasa wa Ongeza Salio, chagua kichupo cha Kadi Nyingine, weka namba ya kadi, ingiza kiasi unachotaka kuongeza, kisha endelea kulipa.",
+      "q5": "Ninalipiaje nauli ya basi?",
+      "a5": "Fungua sehemu ya Tumia Kadi na umuoneshe kondakta wa basi msimbo wako wa QR ili auskani. Hakikisha kadi yako ina salio la kutosha kabla ya kupanda basi. Huduma ya kulipa kwa kugusisha kadi kupitia NFC itapatikana hivi karibuni.",
+      "q6": "Ninawezaje kuona salio langu na malipo ya awali?",
+      "a6": "Salio lako linaonekana kwenye kadi iliyo kwenye ukurasa wa mwanzo. Bonyeza alama ya jicho ili kulionyesha au kulificha. Kuona miamala ya awali ya kuongeza salio na safari, fungua Historia ya Miamala kwenye sehemu ya Mipangilio.",
+      "q7": "Nifanye nini nikikipoteza kadi yangu?",
+      "a7": "Bonyeza Ripoti Kupotea kwenye ukurasa wa mwanzo, chagua kadi husika na uthibitishe. Kadi itazuiwa mara moja na haitaweza kutumika tena. Kadi mbadala itatolewa katika Ofisi Kuu ya GRT, Kijangwani.",
+      "q8": "Ninawezaje kupata msaada?",
+      "a8": "Fungua Mipangilio na bonyeza Kituo cha Msaada ili kupiga simu au kutuma barua pepe kwa timu yetu ya usaidizi. Unaweza pia kusoma Muongozo wa Mtumiaji kwa maelekezo ya hatua kwa hatua kuhusu matumizi ya programu."
     },
     "settings": {
       "title": "Mipangilio",
@@ -143,13 +163,13 @@
       "preferences": {
         "title": "Mapendeleo",
         "label_1": "Lugha",
-        "holder_1": "Chagua lugha ya programu",
+        "holder_1": "Chagua lugha ya unayopendelea",
         "label_2": "Arifa",
         "holder_2": "Dhibiti mipangilio ya arifa zako",
         "label_3": "Tumia Bayometriki",
         "holder_3": "Tumia utambuzi wa uso au alama Za Vidole kuingia haraka",
-        "label_4": "Mwonekano wa programu",
-        "holder_4": "Chagua mwonekano wa programu",
+        "label_4": "Mandhari wa programu",
+        "holder_4": "Chagua mandhari unayopendelea",
         "dark": "Giza",
         "light": "Mwangaza"
       },
@@ -159,8 +179,8 @@
         "holder_1": "Majibu ya maswali yanayoulizwa mara kwa mara",
         "label_2": "Kituo cha Msaada",
         "holder_2": "Piga simu au tutumie barua pepe",
-        "label_3": "Mwongozo wa Mtumiaji",
-        "holder_3": "Mwongozo kamili wa kutumia programu ya ZanBus"
+        "label_3": "Muongozo wa Mtumiaji",
+        "holder_3": "Muongozo kamili wa kutumia programu ya ZanBus"
       },
       "account": {
         "title": "Akaunti",
@@ -168,11 +188,14 @@
         "holder_1": "Angalia taarifa za akaunti yako",
         "label_2": "Toka kwenye Akaunti",
         "holder_2": "Ondoka kwenye akaunti yako kwenye kifaa hiki",
-        "btn_1": "Toka",
-        "btn_2": "Ghairi"
+        "holder_3": "Una uhakika unataka kutoka kwenye akaunti yako?",
+        "yes": "Ndio",
+        "no": "Hapana"
       },
       "about": {
-        "title": "Kuhusu ZanBus",
+        "title_1": "Kuhusu",
+        "title_2": "Kuhusu ZanBus",
+        "subtitle": "Toleo la programu na taarifa zake",
         "desc_1": "ZanBus ni huduma ya kisasa ya usafiri wa mabasi ya umma Zanzibar inayofanya safari za kila siku kuwa rahisi, za kuaminika na zenye urahisi wa matumizi.",
         "desc_2": "Programu ya ZanBus huwasaidia abiria kusafiri kwa urahisi zaidi kwa kuwawezesha kusimamia kadi za usafiri za kawaida au za kidijitali, kuangalia salio, kuongeza salio, kulipia safari kwa kutumia msimbo wa QR, kuona historia ya miamala na kusimamia akaunti zao za usafiri.",
         "desc_3": "Kadi moja. Programu moja. Safari rahisi zaidi kote Zanzibar."

@@ -1,20 +1,22 @@
 <script setup>
 import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const router = useRouter();
 const goBack = () => {
   router.go(-1);
 };
 
 const steps = [
-  "Register with your full name and phone number. Your ZanBus card is created for you right away.",
-  "To sign in, enter your phone number, then the 6-digit code we send you. No password to remember.",
-  "On the home page, tap your card to flip it. Use the eye icon to show or hide your balance.",
-  "Tap Top Up, choose your own card or another card, enter an amount, then proceed to payment.",
-  "When you board, open Use Card and scan the code to take the ride.",
-  "Open Transaction history in Settings to see your top-ups and rides at any time.",
-  "If your card is lost or stolen, tap Report Loss on the home page right away.",
-  "Need a hand? Visit Help & Support in Settings to read the help center, contact the team or report a problem.",
+  t("user.guide.desc_1"),
+  t("user.guide.desc_2"),
+  t("user.guide.desc_3"),
+  t("user.guide.desc_4"),
+  t("user.guide.desc_5"),
+  t("user.guide.desc_6"),
+  t("user.guide.desc_7"),
+  t("user.guide.desc_8")
 ];
 </script>
 
@@ -42,8 +44,8 @@ const steps = [
         </div>
 
         <div class="text-center mt-3">
-          <h5 class="fw-semibold mb-1 text-white">User Guide</h5>
-          <p class="hero-sub fw-semibold">A complete guide to using ZanBus</p>
+          <h5 class="fw-semibold mb-1 text-white">{{ t("user.guide.title") }}</h5>
+          <p class="sub">{{ t("user.guide.subtitle") }}</p>
         </div>
       </div>
     </section>
@@ -60,8 +62,8 @@ const steps = [
             <i class="bi bi-book-half"></i>
           </span>
           <div>
-            <div class="secure-title">Guide</div>
-            <div class="secure-text">From account setup to everyday travel</div>
+            <div class="secure-title">{{ t("user.guide.label_1") }}</div>
+            <div class="secure-text">{{ t("user.guide.label_2") }}</div>
           </div>
         </div>
 
@@ -84,12 +86,6 @@ const steps = [
 .auth-page {
   background: #fff;
   overflow: hidden;
-}
-
-.hero-sub {
-  font-size: 0.7rem;
-  color: #aaa;
-  margin-bottom: 0;
 }
 
 .hero {

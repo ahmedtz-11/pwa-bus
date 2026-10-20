@@ -1,55 +1,50 @@
 <script setup>
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useAccount } from "../stores/account";
-import { useToast } from "../composables/useToast";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const router = useRouter();
-const { user, signOut, deactivateAccount } = useAccount();
-const { show } = useToast();
-
-// 0712345678 -> 0712 345 678
-const phone = computed(() =>
-  (user.value?.phone || "").replace(/^(\d{4})(\d{3})(\d{3})$/, "$1 $2 $3"),
-);
-
-const status = computed(() => user.value?.status || "unknown");
-
-// The four info cards
-const items = computed(() => [
-  {
-    key: "name",
-    icon: "bi-person",
-    label: "Account holder name",
-    value: user.value?.name || "—",
-  },
-  {
-    key: "phone",
-    icon: "bi-phone",
-    label: "Phone number",
-    value: phone.value || "—",
-  },
-  {
-    key: "cards",
-    icon: "bi-credit-card",
-    label: "Registered cards",
-    value: user.value?.cardNo ? "1 card" : "No card",
-    sub: user.value?.cardNo
-      ? `•••• ${user.value.cardNo.slice(-4)} · ${
-          user.value.physical ? "Physical" : "Virtual"
-        }`
-      : "",
-  },
-  {
-    key: "status",
-    icon: "bi-shield-check",
-    label: "Account status",
-    value: status.value.charAt(0).toUpperCase() + status.value.slice(1),
-    tone: status.value === "active" ? "ok" : "bad",
-  },
-]);
 
 const goBack = () => router.go(-1);
+// Edit the questions and answers here
+const items = [
+  {
+    question: t("user.faq.q1"),
+    answer: t("user.faq.a1"),
+  },
+  {
+    question: t("user.faq.q2"),
+    answer: t("user.faq.a2"),
+  },
+  {
+    question: t("user.faq.q3"),
+    answer: t("user.faq.a3"),
+  },
+  {
+    question: t("user.faq.q4"),
+    answer: t("user.faq.a4"),
+  },
+  {
+    question: t("user.faq.q5"),
+    answer: t("user.faq.a5"),
+  },
+  {
+    question: t("user.faq.q6"),
+    answer: t("user.faq.a6"),
+  },
+  {
+    question: t("user.faq.q7"),
+    answer: t("user.faq.a7"),
+  },
+  {
+    question: t("user.faq.q8"),
+    answer: t("user.faq.a8"),
+  },
+];
+
+const openIndex = ref(0); // first question open; null = all closed
+const toggle = (i) => (openIndex.value = openIndex.value === i ? null : i);
 </script>
 
 <template>
@@ -60,17 +55,9 @@ const goBack = () => router.go(-1);
       <div class="hero-overlay"></div>
 
       <div class="position-relative z-2 h-100 p-3">
-        <!-- Top bar: back button (left) + logo (center) -->
         <div
           class="top-bar position-relative d-flex align-items-center justify-content-center"
         >
-          <!-- <RouterLink
-            to="/home"
-            class="back-link position-absolute start-0 text-white text-decoration-none fw-bold"
-            aria-label="Back"
-          >
-            <i class="bi bi-arrow-left"></i>
-          </RouterLink> -->
           <button
             type="button"
             class="back-link position-absolute start-0 text-white text-decoration-none fw-bold border-0 bg-transparent"
@@ -84,8 +71,10 @@ const goBack = () => router.go(-1);
         </div>
 
         <div class="text-center mt-3">
-          <h5 class="fw-semibold mb-1 text-white">FAQs</h5>
-          <p class="small fw-semibold">Fast Answered Questions</p>
+          <h5 class="fw-semibold mb-1 text-white">{{ t("user.faq.title") }}</h5>
+          <p class="sub">
+            {{ t("user.faq.subtitle") }}
+          </p>
         </div>
       </div>
     </section>
@@ -96,24 +85,37 @@ const goBack = () => router.go(-1);
       <div class="form-overlay" aria-hidden="true"></div>
 
       <div class="form-container position-relative mx-auto">
-        <!-- Info cards -->
+        <!-- Accordion -->
         <div class="info-list mb-3">
-          <div v-for="item in items" :key="item.key" class="info-card">
-            <span class="info-icon">
-              <i class="bi" :class="item.icon"></i>
-            </span>
-
-            <div class="info-body">
-              <span class="info-label">{{ item.label }}</span>
-              <span
-                class="info-value"
-                :class="{
-                  'tone-ok': item.tone === 'ok',
-                  'tone-bad': item.tone === 'bad',
-                }"
+          <div
+            v-for="(item, i) in items"
+            :key="i"
+            class="info-card"
+            :class="{ open: openIndex === i }"
+          >
+            <h2 class="faq-heading">
+              <button
+                :id="`faq-btn-${i}`"
+                type="button"
+                class="faq-trigger"
+                :aria-expanded="openIndex === i"
+                :aria-controls="`faq-panel-${i}`"
+                @click="toggle(i)"
               >
-                {{ item.value }}
-              </span>
+                <span class="faq-question">{{ item.question }}</span>
+                <i class="bi bi-chevron-down faq-icon" aria-hidden="true"></i>
+              </button>
+            </h2>
+
+            <div
+              :id="`faq-panel-${i}`"
+              class="faq-panel"
+              role="region"
+              :aria-labelledby="`faq-btn-${i}`"
+            >
+              <div class="faq-panel-inner">
+                <p class="faq-answer">{{ item.answer }}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -126,11 +128,6 @@ const goBack = () => router.go(-1);
 .auth-page {
   background: #fff;
   overflow: hidden;
-}
-
-.small {
-  font-size: 0.7rem !important;
-  color: #aaa !important;
 }
 
 .hero {
@@ -188,7 +185,7 @@ const goBack = () => router.go(-1);
   z-index: 1;
 }
 
-/* ------- Info cards (same look as the old inputs) ------- */
+/* ------- Accordion cards ------- */
 .info-list {
   display: flex;
   flex-direction: column;
@@ -196,76 +193,92 @@ const goBack = () => router.go(-1);
 }
 
 .info-card {
-  display: flex;
-  align-items: stretch;
+  background: #fff;
+  border: 1px solid #ddd;
   border-radius: 0.6rem;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.03);
+  transition: border-color 0.2s ease;
 }
 
-.info-icon {
-  flex: 0 0 auto;
+.info-card.open {
+  border-color: var(--blue2, #1055c9);
+}
+
+.faq-heading {
+  margin: 0;
+  font-size: inherit;
+}
+
+.faq-trigger {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 56px;
-  font-size: 1.25rem;
-  color: var(--blue2);
-  /* background: #f8f9fa; */
-  /* border: 1px solid #e9ecef; */
-  border: 1px solid #ddd;
-  border-right: 0;
-  border-radius: 0.5rem 0 0 0.5rem;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.info-body {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0.6rem 1rem 0.6rem 0.25rem;
-  /* background: #f8f9fa; */
-  border: 1px solid #ddd;
-  border-left: 0;
-  border-radius: 0 0.5rem 0.5rem 0;
+.faq-trigger:focus-visible {
+  outline: 2px solid var(--blue2, #1055c9);
+  outline-offset: -2px;
+  border-radius: 0.5rem;
 }
 
-.info-label {
-  font-size: 0.72rem;
-  color: #555;
-  letter-spacing: 0.02em;
-}
-
-.info-value {
-  font-size: 1rem;
+.faq-question {
+  font-size: 0.9rem;
   font-weight: 600;
   color: #222;
+  letter-spacing: 0.01em;
+}
+
+/* blue accordion icon, rotates when open */
+.faq-icon {
+  flex: 0 0 auto;
+  font-size: 1rem;
+  color: var(--blue2, #1055c9);
+  transition: transform 0.3s ease;
+}
+
+.info-card.open .faq-icon {
+  transform: rotate(180deg);
+}
+
+/* smooth open / close without knowing the height */
+.faq-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows 0.3s ease,
+    visibility 0.3s;
+}
+
+.info-card.open .faq-panel {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+.faq-panel-inner {
+  min-height: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.info-sub {
-  font-size: 0.75rem;
-  color: #6c757d;
+.faq-answer {
+  margin: 0;
+  padding: 0 0.9rem 0.9rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #555;
 }
 
-.status-dot {
-  font-size: 0.5rem;
-  vertical-align: middle;
-  margin-right: 0.25rem;
-}
-
-.tone-ok {
-  color: #198754;
-}
-
-.tone-bad {
-  color: #dc3545;
-}
-
-.confirm-box {
-  background: #fff5f5;
-  border: 1px solid #f5c2c7;
+@media (prefers-reduced-motion: reduce) {
+  .faq-panel,
+  .faq-icon {
+    transition: none;
+  }
 }
 </style>

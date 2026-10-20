@@ -1,5 +1,10 @@
 <script setup>
-import { ref } from "vue";
+import { computed, onMounted, ref } from "vue";
+import {
+  isBiometricSupported,
+  authenticateBiometric,
+  biometricErrorCode,
+} from "../composables/useBiometric";
 import { useRouter } from "vue-router";
 import { useForm } from "vee-validate";
 import { useAccount } from "../stores/account";
@@ -9,8 +14,48 @@ import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
 const router = useRouter();
-const { signIn } = useAccount();
+const {
+  signIn,
+  requestOtp,
+  hasBiometric,
+  startBiometricLogin,
+  finishBiometricLogin,
+} = useAccount();
 const { show } = useToast();
+
+const bioSupported = ref(false);
+const bioLoading = ref(false);
+onMounted(async () => (bioSupported.value = await isBiometricSupported()));
+
+const canUseBiometric = computed(
+  () => hasBiometric.value && bioSupported.value,
+);
+
+async function signInWithFingerprint() {
+  if (bioLoading.value) return;
+  bioLoading.value = true;
+
+  try {
+    const { challenge, credentialId } = await startBiometricLogin(); // "server"
+    const assertion = await authenticateBiometric({ challenge, credentialId }); // fingerprint prompt
+    await finishBiometricLogin(assertion); // "server"
+
+    show("Welcome back!");
+    router.replace("/home");
+  } catch (e) {
+    if (e instanceof DOMException) {
+      show(
+        biometricErrorCode(e) === "cancelled"
+          ? "Fingerprint check was cancelled"
+          : "Fingerprint sign-in failed. Use your phone number instead.",
+      );
+    } else {
+      show(e.message || "Fingerprint sign-in failed.");
+    }
+  } finally {
+    bioLoading.value = false;
+  }
+}
 
 const showOtp = ref(false);
 const verifying = ref(false);
@@ -37,12 +82,6 @@ const { defineField, handleSubmit, errors, values } = useForm({
 const [phone, phoneAttrs] = defineField("phone", (state) => ({
   validateOnModelUpdate: state.errors.length > 0,
 }));
-
-// replace with your real API call
-async function requestOtp(phoneNumber) {
-  await new Promise((r) => setTimeout(r, 600));
-  return true;
-}
 
 // Step 1: phone is valid -> send OTP -> open modal
 const submit = handleSubmit(async (vals) => {
@@ -170,11 +209,32 @@ async function onResend() {
             {{ sending ? "Sending code..." : t("home.login.btn") }}
             <i v-if="!sending" class="bi bi-arrow-right ms-2"></i>
           </button>
+
+          <template v-if="canUseBiometric">
+            <div class="or-divider"><span>or</span></div>
+
+            <button
+              type="button"
+              :disabled="bioLoading || sending"
+              class="btn btn-outline-primary btn-lg w-100 rounded-3 py-2 fw-semibold"
+              @click="signInWithFingerprint"
+            >
+              <span
+                v-if="bioLoading"
+                class="spinner-border spinner-border-sm me-2"
+                aria-hidden="true"
+              ></span>
+              <i v-else class="bi bi-fingerprint me-2"></i>
+              Sign in with fingerprint
+            </button>
+          </template>
         </form>
 
         <!-- Register -->
         <div class="text-center mt-4">
-          <span class="text-secondary small">{{ t("home.login.label_2") }}</span>
+          <span class="text-secondary small">{{
+            t("home.login.label_2")
+          }}</span>
           <RouterLink
             to="/auth/register"
             class="text-green fw-semibold text-decoration-none small ms-1"
@@ -198,6 +258,23 @@ async function onResend() {
 </template>
 
 <style scoped>
+.or-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.9rem 0;
+  color: #999;
+  font-size: 0.8rem;
+}
+
+.or-divider::before,
+.or-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #e5e5e5;
+}
+
 .auth-page {
   background: #fff;
   overflow: hidden;

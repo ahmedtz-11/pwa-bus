@@ -6,22 +6,37 @@ import { useAccount } from "../stores/account";
 import { useToast } from "../composables/useToast";
 import BottomNav from "../components/BottomNav.vue";
 import SheetModal from "../components/SheetModal.vue";
+import {
+  isBiometricSupported,
+  registerBiometric,
+  biometricErrorCode,
+} from "../composables/useBiometric";
 
 const { t, locale } = useI18n();
 const router = useRouter();
-const { signOut } = useAccount();
+const {
+  signOut,
+  hasBiometric,
+  startBiometricSetup,
+  finishBiometricSetup,
+  disableBiometric,
+} = useAccount();
 const { show } = useToast();
 
 const SUPPORT_PHONE = "+255 700 000 000";
 const SUPPORT_EMAIL = "support@zanbus.co.tz";
-const APP_VERSION = "1.0.0";
+const APP_VERSION = "1.0";
 
-const THEMES = ["dark", "light"];
+// const THEMES = ["dark", "light"];
+const THEMES = [
+  { value: "light", icon: "bi-brightness-high-fill", tone: "sun" },
+  { value: "dark", icon: "bi-moon-stars-fill", tone: "moon" },
+];
 
 // Language names are shown in their own language on purpose
 const LANGUAGES = [
-  { value: "en", label: "English" },
-  { value: "sw", label: "Kiswahili" },
+  { value: "en", label: "English", flag: "/imgs/en.png" },
+  { value: "sw", label: "Kiswahili", flag: "/imgs/sw.png" },
 ];
 
 // ------ Saved settings ------
@@ -56,9 +71,11 @@ const languageLabel = computed(
   () => LANGUAGES.find((l) => l.value === locale.value)?.label,
 );
 
-const themeLabel = computed(() => t(`user.settings.preferences.${settings.theme}`));
+const themeLabel = computed(() =>
+  t(`user.settings.preferences.${settings.theme}`),
+);
 
-// ------ Modals ------
+// ---- Modals ----
 const modal = ref(null); // "language" | "theme" | "contact" | "about" | "logout"
 const loggingOut = ref(false);
 
@@ -173,15 +190,16 @@ const sections = computed(() => [
   },
   {
     key: "about",
-    title: t("user.settings.about.title"),
+    title: t("user.settings.about.title_1"),
     items: [
       {
         key: "about",
         icon: "bi-info-circle",
-        title: t("user.settings.items.about.title"),
-        subtitle: t("user.settings.items.about.subtitle", {
-          version: APP_VERSION,
-        }),
+        title: t("user.settings.about.title_2"),
+        // subtitle: t("user.settings.about.title", {
+        //   version: APP_VERSION,
+        // }),
+        subtitle: t("user.settings.about.subtitle"),
         type: "modal",
         modal: "about",
       },
@@ -189,7 +207,7 @@ const sections = computed(() => [
   },
 ]);
 
-// ---------- Row helpers ----------
+// ----- Row helpers -----
 const tagFor = (item) =>
   item.type === "link"
     ? RouterLink
@@ -204,7 +222,50 @@ const attrsFor = (item) => {
   return {};
 };
 
-function onToggle(item, checked) {
+const biometricBusy = ref(false);
+
+// The biometric switch reads from the account, the others from settings
+const isOn = (item) =>
+  item.key === "biometric" ? hasBiometric.value : settings[item.key];
+
+const bioError = (code) =>
+  ({
+    cancelled: t("user.settings.biometric.cancelled", "Fingerprint check was cancelled"),
+    unsupported: t("user.settings.biometric.unsupported", "This device or browser does not support biometric login"),
+    exists: t("user.settings.biometric.exists", "Biometric login is already set up on this device"),
+  })[code] || t("user.settings.biometric.failed", "Could not set up biometric login");
+
+async function toggleBiometric(checked, input) {
+  if (biometricBusy.value) {
+    input.checked = hasBiometric.value;
+    return;
+  }
+  biometricBusy.value = true;
+
+  try {
+    if (checked) {
+      if (!(await isBiometricSupported())) {
+        throw Object.assign(new Error(), { code: "unsupported" });
+      }
+      const { challenge, user } = await startBiometricSetup(); // "server"
+      const result = await registerBiometric({ challenge, user }); // fingerprint prompt
+      await finishBiometricSetup(result); // "server"
+      show(t("user.settings.biometric.on", "Biometric login turned on"));
+    } else {
+      await disableBiometric();
+      show(t("user.settings.biometric.off", "Biometric login turned off"));
+    }
+  } catch (e) {
+    input.checked = hasBiometric.value; // put the switch back
+    show(e instanceof DOMException || e.code ? bioError(biometricErrorCode(e)) : e.message);
+  } finally {
+    biometricBusy.value = false;
+  }
+}
+
+function onToggle(item, checked, input) {
+  if (item.key === "biometric") return toggleBiometric(checked, input);
+
   settings[item.key] = checked;
   show(
     t(checked ? "user.settings.toast.on" : "user.settings.toast.off", {
@@ -212,6 +273,15 @@ function onToggle(item, checked) {
     }),
   );
 }
+
+// function onToggle(item, checked) {
+//   settings[item.key] = checked;
+//   show(
+//     t(checked ? "user.settings.toast.on" : "user.settings.toast.off", {
+//       name: item.title,
+//     }),
+//   );
+// }
 
 // Switch the whole app language and remember it
 function pickLanguage(value) {
@@ -301,14 +371,23 @@ async function logout() {
 
             <!-- Toggle -->
             <template v-if="item.type === 'toggle'">
-              <input
+              <!-- <input
                 type="checkbox"
                 role="switch"
                 class="switch-input"
                 :checked="settings[item.key]"
                 :aria-label="item.title"
                 @change="onToggle(item, $event.target.checked)"
-              />
+              /> -->
+              <input
+  type="checkbox"
+  role="switch"
+  class="switch-input"
+  :checked="isOn(item)"
+  :disabled="item.key === 'biometric' && biometricBusy"
+  :aria-label="item.title"
+  @change="onToggle(item, $event.target.checked, $event.target)"
+/>
               <span class="switch-track" aria-hidden="true"></span>
             </template>
 
@@ -335,8 +414,14 @@ async function logout() {
           :class="{ active: locale === l.value }"
           @click="pickLanguage(l.value)"
         >
-          {{ l.label }}
-          <i v-if="locale === l.value" class="bi bi-check-circle-fill"></i>
+          <img :src="l.flag" alt="" class="flag" />
+          <span>
+            {{ l.label }}
+            <i
+              v-if="locale === l.value"
+              class="bi bi-check-circle-fill ms-1"
+            ></i>
+          </span>
         </button>
       </div>
     </SheetModal>
@@ -348,7 +433,7 @@ async function logout() {
       :subtitle="t('user.settings.preferences.holder_4')"
       @update:model-value="close"
     >
-      <div class="choice-list">
+      <!-- <div class="choice-list">
         <button
           v-for="th in THEMES"
           :key="th"
@@ -357,8 +442,37 @@ async function logout() {
           :class="{ active: settings.theme === th }"
           @click="pickTheme(th)"
         >
+          <span>
+            <i
+              v-if="settings.theme == th"
+              class="bi bi-brightness-alt-high-fill"
+            ></i>
+            <i v-else class="bi bi-moon-stars-fill"></i>
+          </span>
           {{ t(`user.settings.preferences.${th}`) }}
           <i v-if="settings.theme === th" class="bi bi-check-circle-fill"></i>
+        </button>
+      </div> -->
+      <div class="choice-list">
+        <button
+          v-for="th in THEMES"
+          :key="th.value"
+          type="button"
+          class="choice"
+          :class="{ active: settings.theme === th.value }"
+          @click="pickTheme(th.value)"
+        >
+          <span class="d-flex align-items-center gap-2">
+            <span class="theme-icon" :class="th.tone">
+              <i class="bi" :class="th.icon"></i>
+            </span>
+            {{ t(`user.settings.preferences.${th.value}`) }}
+          </span>
+
+          <i
+            v-if="settings.theme === th.value"
+            class="bi bi-check-circle-fill"
+          ></i>
         </button>
       </div>
     </SheetModal>
@@ -393,6 +507,7 @@ async function logout() {
           />
           <p class="fw-semibold mb-1">
             ZanBus - Mwendo Fasta
+            <span class="text-green">({{ APP_VERSION }})</span>
           </p>
         </div>
         <p class="text-secondary small mb-0">
@@ -412,8 +527,8 @@ async function logout() {
     <!-- Log out confirmation -->
     <SheetModal
       :model-value="modal === 'logout'"
-      :title="t('user.settings.account.label_1')"
-      :subtitle="t('user.settings.account.holder_1')"
+      :title="t('user.settings.account.label_2')"
+      :subtitle="t('user.settings.account.holder_3')"
       @update:model-value="close"
     >
       <div class="d-flex gap-2">
@@ -423,7 +538,7 @@ async function logout() {
           :disabled="loggingOut"
           @click="close"
         >
-          {{ t("user.settings.account.btn_2") }}
+          {{ t("user.settings.account.no") }}
         </button>
         <button
           type="button"
@@ -436,7 +551,7 @@ async function logout() {
             class="spinner-border spinner-border-sm me-2"
             aria-hidden="true"
           ></span>
-          {{ t("user.settings.account.btn_1") }}
+          {{ t("user.settings.account.yes") }}
         </button>
       </div>
     </SheetModal>
@@ -447,6 +562,29 @@ async function logout() {
 </template>
 
 <style scoped>
+.theme-icon {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.theme-icon.sun {
+  color: #f59e0b;
+}
+
+.theme-icon.moon {
+  color: #0d6efd;
+}
+
+.flag {
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+}
+
 .home-page {
   background: #f7f7f5;
   color: #111;
@@ -546,7 +684,7 @@ async function logout() {
   justify-content: center;
   border-radius: 13px;
   font-size: 1.15rem;
-  color: var(--blue2, #0d6efd);
+  color: var(--blue2);
   background: #eaf1ff;
 }
 
@@ -617,7 +755,7 @@ async function logout() {
 }
 
 .switch-input:checked + .switch-track {
-  background: var(--blue, #0d6efd);
+  background: var(--blue2);
 }
 
 .switch-input:checked + .switch-track::after {
@@ -654,9 +792,9 @@ async function logout() {
 }
 
 .choice.active {
-  border-color: var(--blue, #0d6efd);
-  background: #fff;
-  color: var(--blue, #0d6efd);
+  border-color: var(--blue2);
+  background: #e8f1fd;
+  color: var(--blue2);
 }
 
 .about-logo {

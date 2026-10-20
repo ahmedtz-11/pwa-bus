@@ -150,7 +150,7 @@ const submit = handleSubmit(async (vals) => {
 
         <div class="text-center mt-3">
           <h5 class="fw-semibold mb-1 text-white">{{ t("user.topup.title") }}</h5>
-          <p class="hero-sub fw-semibold">{{ t("user.topup.subtitle") }}</p>
+          <p class="sub">{{ t("user.topup.subtitle") }}</p>
         </div>
       </div>
     </section>
@@ -324,12 +324,6 @@ const submit = handleSubmit(async (vals) => {
 .auth-page {
   background: #fff;
   overflow: hidden;
-}
-
-.hero-sub {
-  font-size: 0.7rem;
-  color: #aaa;
-  margin-bottom: 0;
 }
 
 .hero {

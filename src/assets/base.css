@@ -91,6 +91,11 @@ a {
   margin: 0px !important;
 }
 
+.sub {
+  font-size: 0.8rem !important;
+  color: #cbd9ea !important;
+}
+
 .btn:disabled {
   opacity: 0.5;
 }

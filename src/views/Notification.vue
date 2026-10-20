@@ -48,7 +48,7 @@ const items = computed(() => [
 
         <div class="text-center mt-3">
           <h5 class="fw-semibold mb-1 text-white">{{ t("user.notification.title") }}</h5>
-          <p class="small fw-semibold">
+          <p class="sub">
             {{ t("user.notification.subtitle") }}
           </p>
         </div>
